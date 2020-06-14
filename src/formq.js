@@ -17,7 +17,8 @@ export default function FormQ(props) {
             max="100"
             value={Math.round(props.value / props.source * 100)}
             onChange={e => {
-              props.onChange(Math.round(e.target.value / 100 * props.source));
+              let pct = Math.min(100, Math.max(0, e.target.value * 1));
+              props.onChange(pct / 100 * props.source);
             }}
           />
           <div className="input-group-append">
@@ -28,7 +29,7 @@ export default function FormQ(props) {
           type="number"
           lang="en"
           className="form-control student-block"
-          value={props.value}
+          value={Math.round(props.value)}
           onChange={e => props.onChange(e.target.value)}
         />
         <div className="input-group-append">
