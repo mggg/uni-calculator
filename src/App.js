@@ -10,6 +10,7 @@ class App extends React.Component {
       enrollment: 1000,
       beds: 1000,
       fallStudents: 100,
+      fallInPerson: 90,
 
       normalFaculty: 100,
       fallFaculty: 80,
@@ -21,20 +22,22 @@ class App extends React.Component {
 
       costPerTest: 20.00,
       highTestPercent: 40,
-      lowTestPercent: 60,
 
       semesterLength: 110,
       highTestFrequency: 3,
-      mediumTestFrequency: 7
+      mediumTestFrequency: 7,
+
+      reveal: false
     }
 
     this.updateRawVal = this.updateRawVal.bind(this);
     this.prefill = this.prefill.bind(this);
+    this.preplan = this.preplan.bind(this);
   }
 
   componentDidMount() {
     fetch("/uni-calculator/college_vals.csv").then(res => res.text()).then((data) => {
-      let c2 = [{name: " Prefill" }],
+      let c2 = [{name: " Select" }],
           rows = data.trim().split("\n"),
           headers = rows[0].trim().split(",");
       rows = rows.slice(1);
@@ -71,6 +74,28 @@ class App extends React.Component {
     });
   }
 
+  preplan(plan_index) {
+    if (plan_index * 1 === 1) {
+      this.setState({
+        fallStudents: this.state.enrollment * 0.9,
+        fallInPerson: this.state.enrollment * 0.9 * 0.5,
+        highTestPercent: 1
+      });
+    } else if (plan_index * 1 === 2) {
+      this.setState({
+        fallStudents: this.state.enrollment * 0.85,
+        fallInPerson: this.state.enrollment * 0.85 * 0.9,
+        highTestPercent: 89
+      });
+    } else if (plan_index * 1 === 3) {
+      this.setState({
+        fallStudents: this.state.enrollment * 0.7,
+        fallInPerson: this.state.enrollment * 0.7 * 0.8,
+        highTestPercent: 88
+      });
+    }
+  }
+
   render() {
     return (<div className="container">
       <div className="col-sm-12">
@@ -82,8 +107,13 @@ class App extends React.Component {
             <h3>Description</h3>
             <p>This calculator provides cost estimates for university COVID testing plans.</p>
           </section>
+          <h3>University</h3>
+        </div>
+
+        <div className="qSection">
+          <h4>Students</h4>
           <section>
-            <h3>University</h3>
+            &nbsp;&nbsp;Pre-fill data&nbsp;&nbsp;
             <select onChange={e => this.prefill(e.target.value)}>
               {this.state.colleges.map((c, i) => {
                 return <option key={i} value={i}>
@@ -91,11 +121,17 @@ class App extends React.Component {
                 </option>
               })}
             </select>
+            <br/>
+            <br/>
+            &nbsp;&nbsp;Select scenario&nbsp;&nbsp;
+            <select onChange={e => this.preplan(e.target.value)}>
+              <option value="0">Pre-Select</option>
+              <option value="1">Small</option>
+              <option value="2">Medium</option>
+              <option value="3">Large</option>
+            </select>
           </section>
-        </div>
-
-        <div className="qSection">
-          <h4>Students</h4>
+          <br/>
           <FormQ
             id="enrollment"
             label="Normal enrollment"
@@ -118,6 +154,15 @@ class App extends React.Component {
             counts="students"
             percent="%"
             onChange={val => this.updateRawVal('fallStudents', val * 1)}
+          />
+          <FormQ
+            id="fall"
+            label="Projected on-campus enrollment"
+            value={this.state.fallInPerson}
+            source={this.state.fallStudents}
+            counts="students"
+            percent="%"
+            onChange={val => this.updateRawVal('fallInPerson', val * 1)}
           />
         </div>
 
@@ -198,7 +243,7 @@ class App extends React.Component {
                   lang="en"
                   className="form-control"
                   value={
-                    Math.round((this.state.fallStaff * 1 + this.state.fallFaculty * 1 + this.state.fallStudents * 1)
+                    Math.round((this.state.fallStaff * 1 + this.state.fallFaculty * 1 + this.state.fallInPerson * 1)
                     * this.state.highTestPercent
                     / 100)
                   }
@@ -215,13 +260,12 @@ class App extends React.Component {
                   <span className="input-group-text">every</span>
                 </div>
                 <input
-                  type="number"
-                  lang="en"
+                  type="text"
                   className="form-control"
                   value={this.state.highTestFrequency}
                   onChange={e => {
                     this.setState({
-                      highTestFrequency: e.target.value * 1
+                      highTestFrequency: e.target.value
                     })
                   }}
                 />
@@ -259,7 +303,7 @@ class App extends React.Component {
                   lang="en"
                   className="form-control"
                   value={
-                    Math.round((this.state.fallStaff * 1 + this.state.fallFaculty * 1 + this.state.fallStudents * 1)
+                    Math.round((this.state.fallStaff * 1 + this.state.fallFaculty * 1 + this.state.fallInPerson * 1)
                     * (100 - this.state.highTestPercent)
                     / 100)
                   }
@@ -276,13 +320,12 @@ class App extends React.Component {
                   <span className="input-group-text">every</span>
                 </div>
                 <input
-                  type="number"
-                  lang="en"
+                  type="text"
                   className="form-control"
                   value={this.state.mediumTestFrequency}
                   onChange={e => {
                     this.setState({
-                      mediumTestFrequency: e.target.value * 1
+                      mediumTestFrequency: e.target.value
                     })
                   }}
                 />
@@ -338,42 +381,50 @@ class App extends React.Component {
         </div>
 
         <div style={{background: '#eee', textAlign: 'center', paddingTop: "10px", paddingBottom: "15px"}}>
-          <div style={{marginLeft:"15%", marginRight: "15%"}}>
-            <h4>Outcomes</h4>
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-              Cost per person for semester (high-testing group)
-              <strong>$
-              {(this.state.costPerTest
-                  // * this.state.highTestPercent / 100
-                  // * (this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
-                  * this.state.semesterLength / this.state.highTestFrequency
-                  // / this.state.fallStudents
-              ).toFixed(2)}
-              </strong>
-            </div>
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-              Cost per person for semester (medium-testing group)
-              <strong>$
-              {(this.state.costPerTest
-                  // * (100 - this.state.highTestPercent) / 100
-                  // * (this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
-                  * this.state.semesterLength / this.state.mediumTestFrequency
-                  // / this.state.fallStudents
-              ).toFixed(2)}</strong>
-            </div>
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-              Total cost
-              <strong>$
-              {Math.round(this.state.costPerTest *
-                  (
-                    this.state.highTestPercent / 100 * this.state.semesterLength / this.state.highTestFrequency
-                    +
-                    (100 - this.state.highTestPercent) / 100 * this.state.semesterLength / this.state.mediumTestFrequency
-                  )
-                  * (this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
-              ).toLocaleString()}</strong>
-            </div>
+          {this.state.reveal
+            ? <div style={{marginLeft:"15%", marginRight: "15%"}}>
+              <h4>Outcomes</h4>
+              <div style={{color: 'red'}}>
+                {["semesterLength", "highTestFrequency", "costPerTest", "mediumTestFrequency", "fallStaff", "fallFaculty", "fallStudents", "fallInPerson"].map((key) => {
+                  return (this.state[key] * 1) ? null : "Non-numeric value for: " + key;
+                })}
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                Cost per person for semester (high-testing group)
+                <strong>$
+                {(this.state.costPerTest
+                    // * this.state.highTestPercent / 100
+                    // * (this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
+                    * this.state.semesterLength / this.state.highTestFrequency
+                    // / this.state.fallStudents
+                ).toFixed(2)}
+                </strong>
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                Cost per person for semester (medium-testing group)
+                <strong>$
+                {(this.state.costPerTest
+                    // * (100 - this.state.highTestPercent) / 100
+                    // * (this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
+                    * this.state.semesterLength / this.state.mediumTestFrequency
+                    // / this.state.fallStudents
+                ).toFixed(2)}</strong>
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                Total cost
+                <strong>$
+                {Math.round(this.state.costPerTest *
+                    (
+                      this.state.highTestPercent / 100 * this.state.semesterLength / this.state.highTestFrequency
+                      +
+                      (100 - this.state.highTestPercent) / 100 * this.state.semesterLength / this.state.mediumTestFrequency
+                    )
+                    * (this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
+                ).toLocaleString()}</strong>
+              </div>
           </div>
+          : <button className="btn btn-large btn-info" onClick={e => this.setState({ reveal: true })}>Estimate Costs</button>
+        }
         </div>
         <br/>
         <br/>
