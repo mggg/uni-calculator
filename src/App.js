@@ -17,7 +17,15 @@ class App extends React.Component {
       normalStaff: 50,
       contractStaff: 20,
       fallStaff: 70,
-      colleges: []
+      colleges: [],
+
+      costPerTest: 20.00,
+      highTestPercent: 40,
+      lowTestPercent: 60,
+
+      semesterLength: 110,
+      highTestFrequency: 3,
+      mediumTestFrequency: 7
     }
 
     this.updateRawVal = this.updateRawVal.bind(this);
@@ -25,7 +33,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch("./college_vals.csv").then(res => res.text()).then((data) => {
+    fetch("/uni-calculator/college_vals.csv").then(res => res.text()).then((data) => {
       let c2 = [{name: " Prefill" }],
           rows = data.trim().split("\n"),
           headers = rows[0].trim().split(",");
@@ -59,7 +67,7 @@ class App extends React.Component {
     this.setState({
       enrollment: college.enrollment,
       fallStudents: college.enrollment,
-      beds: college.dorms,      
+      beds: college.dorms,
     });
   }
 
@@ -160,29 +168,215 @@ class App extends React.Component {
           />
         </div>
 
-        <div>
+        <div className="qSection cohorts">
           <h4>Testing</h4>
           <div>
-            High-testing cohort
+            <label>High-testing cohort</label>
+            <br/>
+            <form className="form-inline" style={{display: 'inline-block'}}>
+              <div style={{display: 'flex'}}>
+                <input
+                  type="number"
+                  lang="en"
+                  className="form-control percent-readout"
+                  value={this.state.highTestPercent}
+                  onChange={e => {
+                    this.setState({
+                      highTestPercent: e.target.value * 1
+                    })
+                  }}
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text">%</span>
+                </div>
+              </div>
+            </form>
+            <form className="form-inline" style={{display: 'inline-block'}}>
+              <div style={{display: 'flex'}}>
+                <input
+                  type="number"
+                  lang="en"
+                  className="form-control"
+                  value={
+                    Math.round((this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
+                    * this.state.highTestPercent
+                    / 100)
+                  }
+                  disabled="disabled"
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text">members</span>
+                </div>
+              </div>
+            </form>
+            <form className="form-inline" style={{display: 'inline-block'}}>
+              <div style={{display: 'flex'}}>
+                <div className="input-group-prepend">
+                  <span className="input-group-text">every</span>
+                </div>
+                <input
+                  type="number"
+                  lang="en"
+                  className="form-control"
+                  value={this.state.highTestFrequency}
+                  onChange={e => {
+                    this.setState({
+                      highTestFrequency: e.target.value * 1
+                    })
+                  }}
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text">days</span>
+                </div>
+              </div>
+            </form>
           </div>
           <div>
-            Medium-testing cohort
+            <label>Medium-testing cohort</label>
+            <br/>
+            <form className="form-inline" style={{display: 'inline-block'}}>
+              <div style={{display: 'flex'}}>
+                <input
+                  type="number"
+                  lang="en"
+                  className="form-control percent-readout"
+                  value={100 - this.state.highTestPercent}
+                  onChange={e => {
+                    this.setState({
+                      highTestPercent: 100 - (e.target.value * 1)
+                    })
+                  }}
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text">%</span>
+                </div>
+              </div>
+            </form>
+            <form className="form-inline" style={{display: 'inline-block'}}>
+              <div style={{display: 'flex'}}>
+                <input
+                  type="number"
+                  lang="en"
+                  className="form-control"
+                  value={
+                    Math.round((this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
+                    * (100 - this.state.highTestPercent)
+                    / 100)
+                  }
+                  disabled="disabled"
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text">members</span>
+                </div>
+              </div>
+            </form>
+            <form className="form-inline" style={{display: 'inline-block'}}>
+              <div style={{display: 'flex'}}>
+                <div className="input-group-prepend">
+                  <span className="input-group-text">every</span>
+                </div>
+                <input
+                  type="number"
+                  lang="en"
+                  className="form-control"
+                  value={this.state.mediumTestFrequency}
+                  onChange={e => {
+                    this.setState({
+                      mediumTestFrequency: e.target.value * 1
+                    })
+                  }}
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text">days</span>
+                </div>
+              </div>
+            </form>
           </div>
-          <div>
+          <hr/>
+          <div style={{width:"60%", display:"flex", justifyContent: "space-between"}}>
             Cost per test
+            <form className="form-inline" style={{display: 'inline-block'}}>
+              <div style={{display: 'flex'}}>
+                <input
+                  type="number"
+                  lang="en"
+                  className="form-control"
+                  value={this.state.costPerTest}
+                  onChange={e => {
+                    this.setState({
+                      costPerTest: e.target.value * 1
+                    })
+                  }}
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text">dollars</span>
+                </div>
+              </div>
+            </form>
           </div>
-          <div>
+          <div style={{width:"60%", display:"flex", justifyContent: "space-between"}}>
             Semester length
+            <form className="form-inline" style={{display: 'inline-block'}}>
+              <div style={{display: 'flex'}}>
+                <input
+                  type="number"
+                  lang="en"
+                  className="form-control"
+                  value={this.state.semesterLength}
+                  onChange={e => {
+                    this.setState({
+                      semesterLength: e.target.value * 1
+                    })
+                  }}
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text">days</span>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
 
-        <div style={{background: '#eee'}}>
-          <h4>Outcomes</h4>
-          Total cost
-          <br/>
-          Cost per capita
+        <div style={{background: '#eee', textAlign: 'center', paddingTop: "10px", paddingBottom: "15px"}}>
+          <div style={{marginLeft:"15%", marginRight: "15%"}}>
+            <h4>Outcomes</h4>
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+              Cost per person for semester (high-testing group)
+              <strong>$
+              {(this.state.costPerTest
+                  // * this.state.highTestPercent / 100
+                  // * (this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
+                  * this.state.semesterLength / this.state.highTestFrequency
+                  // / this.state.fallStudents
+              ).toFixed(2)}
+              </strong>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+              Cost per person for semester (medium-testing group)
+              <strong>$
+              {(this.state.costPerTest
+                  // * (100 - this.state.highTestPercent) / 100
+                  // * (this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
+                  * this.state.semesterLength / this.state.mediumTestFrequency
+                  // / this.state.fallStudents
+              ).toFixed(2)}</strong>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+              Total cost
+              <strong>$
+              {Math.round(this.state.costPerTest *
+                  (
+                    this.state.highTestPercent / 100 * this.state.semesterLength / this.state.highTestFrequency
+                    +
+                    (100 - this.state.highTestPercent) / 100 * this.state.semesterLength / this.state.mediumTestFrequency
+                  )
+                  * (this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
+              ).toLocaleString()}</strong>
+            </div>
+          </div>
         </div>
-
+        <br/>
+        <br/>
       </div>
     </div>);
   }

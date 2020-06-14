@@ -28,6 +28,23 @@ nav {
   width: 70%;
   margin-left: 15%;
 }
+select {
+  font-size: 14pt;
+}
+@media (max-width: 1000px) {
+  select {
+    max-width: 80%;
+  }
+
+  .qSection {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .input-group-text {
+    max-height: 40px;
+  }
+}
 a {
   color: #42b983;
 }
@@ -49,6 +66,13 @@ a {
   display: flex;
   margin-right: 15px;
 }
-.percent-readout {
+.cohorts input {
+  border-radius: 0;
+  width: 150px !important;
+}
+.percent-readout, .cohorts input.percent-readout {
   width: 100px !important;
+}
+.cohorts .input-group-append {
+  margin-right: 15px;
 }
