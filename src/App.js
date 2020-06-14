@@ -101,14 +101,14 @@ class App extends React.Component {
             label="Normal enrollment"
             value={this.state.enrollment}
             counts="students"
-            onChange={val => this.updateRawVal('enrollment', val)}
+            onChange={val => this.updateRawVal('enrollment', val * 1)}
           />
           <FormQ
             id="dorms"
             label="Dormitory capacity"
             value={this.state.beds}
             counts="beds"
-            onChange={val => this.updateRawVal('beds', val)}
+            onChange={val => this.updateRawVal('beds', val * 1)}
           />
           <FormQ
             id="fall"
@@ -117,7 +117,7 @@ class App extends React.Component {
             source={this.state.enrollment}
             counts="students"
             percent="%"
-            onChange={val => this.updateRawVal('fallStudents', val)}
+            onChange={val => this.updateRawVal('fallStudents', val * 1)}
           />
         </div>
 
@@ -128,7 +128,7 @@ class App extends React.Component {
             label="Normal faculty"
             value={this.state.normalFaculty}
             counts="members"
-            onChange={val => this.updateRawVal('normalFaculty', val)}
+            onChange={val => this.updateRawVal('normalFaculty', val * 1)}
           />
           <FormQ
             id="studentfacing"
@@ -137,7 +137,7 @@ class App extends React.Component {
             source={this.state.normalFaculty}
             counts="members"
             percent="%"
-            onChange={val => this.updateRawVal('fallFaculty', val)}
+            onChange={val => this.updateRawVal('fallFaculty', val * 1)}
           />
         </div>
 
@@ -148,20 +148,20 @@ class App extends React.Component {
             label="On-campus staff, university-employed"
             value={this.state.normalStaff}
             counts="members"
-            onChange={val => this.updateRawVal('normalStaff', val)}
+            onChange={val => this.updateRawVal('normalStaff', val * 1)}
           />
           <FormQ
             id="contract"
             label="On-campus staff, contract"
             value={this.state.contractStaff}
             counts="members"
-            onChange={val => this.updateRawVal('contractStaff', val)}
+            onChange={val => this.updateRawVal('contractStaff', val * 1)}
           />
           <FormQ
             id="projectstaff"
             label="Projected on-campus staff in Fall"
             value={this.state.fallStaff}
-            source={this.state.normalStaff + this.state.contractStaff}
+            source={this.state.normalStaff * 1 + this.state.contractStaff * 1}
             counts="members"
             percent="%"
             onChange={val => this.updateRawVal('fallStaff', val)}
@@ -198,7 +198,7 @@ class App extends React.Component {
                   lang="en"
                   className="form-control"
                   value={
-                    Math.round((this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
+                    Math.round((this.state.fallStaff * 1 + this.state.fallFaculty * 1 + this.state.fallStudents * 1)
                     * this.state.highTestPercent
                     / 100)
                   }
@@ -259,7 +259,7 @@ class App extends React.Component {
                   lang="en"
                   className="form-control"
                   value={
-                    Math.round((this.state.fallStaff + this.state.fallFaculty + this.state.fallStudents)
+                    Math.round((this.state.fallStaff * 1 + this.state.fallFaculty * 1 + this.state.fallStudents * 1)
                     * (100 - this.state.highTestPercent)
                     / 100)
                   }
