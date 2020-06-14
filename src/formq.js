@@ -1,10 +1,6 @@
 import React from 'react'
 
 export default function FormQ(props) {
-  let percentChange = (e) => {
-
-  }
-
   return <form className="form-inline">
     <div className="form-group" style={{display: 'flex', justifyContent: 'space-between'}}>
       <label htmlFor={props.id}>{props.label}</label>
