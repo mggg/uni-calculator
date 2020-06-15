@@ -25,6 +25,7 @@ export default function FormQ(props) {
           type="number"
           lang="en"
           className="form-control student-block"
+          min="0"
           value={Math.round(props.value)}
           onChange={e => props.onChange(e.target.value)}
         />

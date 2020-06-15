@@ -397,6 +397,7 @@ class App extends React.Component {
                   type="number"
                   lang="en"
                   className="form-control percent-readout"
+                  min="0"
                   value={
                     Math.round((
                       this.state.fallInPerson * this.state.studentCampusFrequency
@@ -426,6 +427,7 @@ class App extends React.Component {
                   type="number"
                   lang="en"
                   className="form-control"
+                  min="0"
                   value={
                     Math.round((
                       this.state.fallInPerson * this.state.studentCampusFrequency
@@ -448,8 +450,10 @@ class App extends React.Component {
                   <span className="input-group-text">every</span>
                 </div>
                 <input
-                  type="text"
+                  type="number"
                   className="form-control"
+                  min="0"
+                  step="0.01"
                   value={this.state.highTestFrequency}
                   onChange={e => {
                     this.setState({
@@ -471,6 +475,7 @@ class App extends React.Component {
                 <input
                   type="number"
                   lang="en"
+                  min="0"
                   className="form-control percent-readout"
                   value={ Math.round(1000 - (
                     this.state.fallInPerson * this.state.studentCampusFrequency
@@ -499,6 +504,7 @@ class App extends React.Component {
                   type="number"
                   lang="en"
                   className="form-control"
+                  min="0"
                   value={
                     Math.round((
                       this.state.fallInPerson * (100 - this.state.studentCampusFrequency)
@@ -521,8 +527,10 @@ class App extends React.Component {
                   <span className="input-group-text">every</span>
                 </div>
                 <input
-                  type="text"
+                  type="number"
                   className="form-control"
+                  min="0"
+                  step=".01"
                   value={this.state.mediumTestFrequency}
                   onChange={e => {
                     this.setState({
@@ -545,6 +553,8 @@ class App extends React.Component {
                   type="number"
                   lang="en"
                   className="form-control"
+                  min="0"
+                  step=".01"
                   value={this.state.costPerTest}
                   onChange={e => {
                     this.setState({
@@ -566,6 +576,7 @@ class App extends React.Component {
                 <input
                   type="number"
                   lang="en"
+                  min="0"
                   className="form-control"
                   value={this.state.semesterLength}
                   onChange={e => {
