@@ -19,16 +19,16 @@ class App extends React.Component {
       studentCampusFrequency: 50,
 
 
-      normalFaculty: 100, // count of normal faculty
-      fallFaculty: 80, // count of fall faculty (appearing weekly or more)
+      normalFaculty: 0, // count of normal faculty
+      fallFaculty: 0, // count of fall faculty (appearing weekly or more)
       facultyCampusFrequency: 50, // this is a %
 
-      normalStaff: 50,
-      fallStaff: 50,
+      normalStaff: 0,
+      fallStaff: 0,
       staffCampusFrequency: 50, // %
 
-      contractStaff: 20,
-      fallContractStaff: 20,
+      contractStaff: 0,
+      fallContractStaff: 0,
       contractCampusFrequency: 50, // %
 
       colleges: [],
@@ -164,13 +164,15 @@ class App extends React.Component {
             such as (but not exclusively) the testing service to be offered by the Broad Institute.</p>
           </section>
 
-          <section className="qSection">
+          <section className="qSection suggestions">
             <h3>Summary of modeling recommendations</h3>
+            <p>Quick review of suggested frequency for surveillance testing with isolation strategy, without assumptions on contact tracing.</p>
             <ul>
-              <li></li>
-              <li></li>
-              <li></li>
+              <li>Rochelle Walensky’s team (Harvard Med) recommends Q3 (that is, every three days) testing in order to keep the total number of infections minimized while keeping costs in reasonable range.</li>
+              <li>Peter Frazier’s group (Cornell operations research) recommends Q5 testing but does not consider exogenous shocks, may increase frequency when that parameter is added.</li>
+              <li>The IDSS COVID Collaboration (contact: Peko Hosoi at MIT) finds that Q12 testing suffices for stability (i.e., to prevent exponential outbreak within campus) with R0 = 2 and 100% sensitivity, but this finding does not take into account total number of infections, only rate of growth. By contrast, R0 = 2.5 and 70% sensitivity leads to recommendation of Q5.6, still only taking growth rate into account. The group’s survey of SIR/MCMC/network models indicates that Q12 testing could result in over half of campus infected, while Q3 is likely under 1%.</li>
             </ul>
+            <p><strong>Bottom line:</strong> a strategy where every individual is tested twice weekly would be in line with all available credible models. A weekly strategy is still extremely helpful for maintaining a steady and tolerably low infection rate on campus.</p>
           </section>
         </div>
 

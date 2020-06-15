@@ -104,3 +104,11 @@ label.scenario strong {
   margin-top: -1.5em;
   margin-bottom: -1.5em;
 }
+
+.suggestions {
+  text-align: left;
+}
+
+.suggestions h3 {
+  text-align: center;
+}
