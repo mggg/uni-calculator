@@ -14,8 +14,8 @@ class App extends React.Component {
       undergrad: 800,
       grad: 200,
       beds: 1000,
-      fallStudents: 800, // count of students who re-enrolled
-      fallInPerson: 800, // count of students coming in weekly
+      fallStudentsPct: 80, // % of students who re-enrolled
+      fallInPersonPct: 100, // % of students coming in weekly
       studentCampusFrequency: 50,
 
 
@@ -29,7 +29,7 @@ class App extends React.Component {
 
       contractStaff: 0,
       fallContractStaffPct: 50,
-      contractCampusFrequency: 50, // %
+      contractCampusFrequency: 100, // %
 
       colleges: [],
 
@@ -84,7 +84,7 @@ class App extends React.Component {
     this.setState({
       undergrad: college.undergrad,
       grad: college.grad,
-      fallStudents: college.undergrad + college.grad,
+      fallStudentsPct: 100,
       beds: college.dorms,
     });
   }
@@ -96,8 +96,8 @@ class App extends React.Component {
       });
     } else if (plan_index * 1 === 1) {
       this.setState({
-        fallStudents: (this.state.undergrad + this.state.grad) * 0.7,
-        fallInPerson: (this.state.undergrad + this.state.grad) * 0.7 * 0.8,
+        fallStudentsPct: 70,
+        fallInPersonPct: 80,
         studentCampusFrequency: 7/8 * 100,
 
         fallFacultyPct: 80,
@@ -113,8 +113,8 @@ class App extends React.Component {
       });
     } else if (plan_index * 1 === 2) {
       this.setState({
-        fallStudents: (this.state.undergrad + this.state.grad) * 0.4,
-        fallInPerson: (this.state.undergrad + this.state.grad) * 0.4 * 0.9,
+        fallStudentsPct: 40,
+        fallInPersonPct: 90,
         studentCampusFrequency: 50,
 
         fallFacultyPct: 60,
@@ -129,8 +129,8 @@ class App extends React.Component {
       });
     } else if (plan_index * 1 === 3) {
       this.setState({
-        fallStudents: (this.state.undergrad + this.state.grad) * 0.85,
-        fallInPerson: (this.state.undergrad + this.state.grad) * 0.85 * 0.9,
+        fallStudentsPct: 85,
+        fallInPersonPct: 90,
         studentCampusFrequency: 8/9 * 100,
 
         fallFacultyPct: 65,
@@ -145,8 +145,8 @@ class App extends React.Component {
       });
     } else if (plan_index * 1 === 4) {
       this.setState({
-        fallStudents: (this.state.undergrad + this.state.grad) * 0.9,
-        fallInPerson: (this.state.undergrad + this.state.grad) * 0.9 * 0.5,
+        fallStudentsPct: 90,
+        fallInPersonPct: 50,
         studentCampusFrequency: 100,
 
         fallFacultyPct: 50,
@@ -156,7 +156,7 @@ class App extends React.Component {
         staffCampusFrequency: 60,
 
         fallContractStaffPct: 0,
-        contractCampusFrequency: 0,
+        contractCampusFrequency: 100,
         scenarioSelect: 4
       });
     }
@@ -337,21 +337,21 @@ class App extends React.Component {
           <FormQ
             id="fall"
             label="Projected student enrollment in fall"
-            value={this.state.fallStudents}
+            value={this.state.fallStudentsPct}
             source={this.state.undergrad + this.state.grad}
             counts="students"
             percent="%"
-            onChange={val => this.updateRawVal('fallStudents', val * 1)}
+            onChange={val => this.updateRawVal('fallStudentsPct', val * 1)}
           />
           <FormQ
             id="fall"
             label="Projected weekly on-campus students"
-            value={this.state.fallInPerson}
-            source={this.state.fallStudents}
+            value={this.state.fallInPersonPct}
+            source={this.state.fallStudentsPct * (this.state.undergrad + this.state.grad) / 100}
             counts="students"
             percent="%"
             disabled={this.disableScenario()}
-            onChange={val => this.updateRawVal('fallInPerson', val * 1)}
+            onChange={val => this.updateRawVal('fallInPersonPct', val * 1)}
           />
 
           <TestingSlider
@@ -407,11 +407,6 @@ class App extends React.Component {
             percent="%"
             onChange={val => this.updateRawVal('fallContractStaffPct', val)}
           />
-          <TestingSlider
-            label="Contract staff campus-visit frequency"
-            value={this.state.contractCampusFrequency}
-            onChange={e => this.setState({ contractCampusFrequency: e.target.value * 1 })}
-          />
         </div>
 
         <hr id="separator"></hr>
@@ -431,7 +426,7 @@ class App extends React.Component {
                   min="0"
                   value={
                     Math.round((
-                      this.state.fallInPerson * this.state.studentCampusFrequency
+                      this.state.fallInPersonPct/100 * this.state.fallStudentsPct/100 * (this.state.undergrad + this.state.grad) * this.state.studentCampusFrequency
                       + this.state.fallFacultyPct/100 * this.state.normalFaculty * this.state.facultyCampusFrequency
                       + this.state.fallStaffPct/100 * this.state.normalStaff * this.state.staffCampusFrequency
                       + this.state.fallContractStaffPct/100 * this.state.contractStaff * this.state.contractCampusFrequency
@@ -480,7 +475,7 @@ class App extends React.Component {
                   min="0"
                   value={
                     Math.round((
-                      this.state.fallInPerson * (100 - this.state.studentCampusFrequency)
+                      this.state.fallInPersonPct/100 * this.state.fallStudentsPct/100 * (this.state.undergrad + this.state.grad) * (100 - this.state.studentCampusFrequency)
                       + this.state.fallFacultyPct/100 * this.state.normalFaculty * (100 - this.state.facultyCampusFrequency)
                       + this.state.fallStaffPct/100 * this.state.normalStaff * (100 - this.state.staffCampusFrequency)
                       + this.state.fallContractStaffPct/100 * this.state.contractStaff * (100 - this.state.contractCampusFrequency)
@@ -572,7 +567,7 @@ class App extends React.Component {
             ? <div style={{marginLeft:"15%", marginRight: "15%"}}>
               <h4>Outcomes</h4>
               <div style={{color: 'red'}}>
-                {["semesterLength", "highTestFrequency", "costPerTest", "mediumTestFrequency", "fallStaffPct", "fallFacultyPct", "fallStudents", "fallInPerson"].map((key) => {
+                {["semesterLength", "highTestFrequency", "costPerTest", "mediumTestFrequency", "fallStaffPct", "fallFacultyPct", "fallStudentPct", "fallInPersonPct"].map((key) => {
                   return (this.state[key] * 1) ? null : "Non-numeric value for: " + key;
                 })}
               </div>
@@ -596,7 +591,7 @@ class App extends React.Component {
                 <strong>$
                 {Math.round(this.state.costPerTest * this.state.semesterLength / 100 * (
 
-                  ((this.state.fallInPerson * (100 - this.state.studentCampusFrequency)
+                  ((this.state.fallInPersonPct/100 * this.state.fallStudentsPct/100 * (this.state.undergrad * 1 + this.state.grad * 1) * (100 - this.state.studentCampusFrequency)
                   + this.state.fallFacultyPct/100 * this.state.normalFaculty * (100 - this.state.facultyCampusFrequency)
                   + this.state.fallStaffPct/100 * this.state.normalStaff * (100 - this.state.staffCampusFrequency)
                   + this.state.fallContractStaffPct/100 * this.state.contractStaff * (100 - this.state.contractCampusFrequency))
@@ -604,7 +599,7 @@ class App extends React.Component {
 
                   +
 
-                  ((this.state.fallInPerson * this.state.studentCampusFrequency
+                  ((this.state.fallInPersonPct/100 * this.state.fallStudentsPct/100 * (this.state.undergrad * 1 + this.state.grad * 1) * this.state.studentCampusFrequency
                   + this.state.fallFacultyPct/100 * this.state.normalFaculty * this.state.facultyCampusFrequency
                   + this.state.fallStaffPct/100 * this.state.normalStaff * this.state.staffCampusFrequency
                   + this.state.fallContractStaffPct/100 * this.state.contractStaff * this.state.contractCampusFrequency)
