@@ -76,3 +76,19 @@ a {
 .cohorts .input-group-append {
   margin-right: 15px;
 }
+
+label.scenario {
+  cursor: pointer;
+  padding: 8px;
+  border: 2px solid silver;
+  border-radius: 8px;
+}
+label.scenario.select {
+  border: 2px solid skyblue;
+}
+label.scenario input {
+  margin-right: 12px;
+}
+label.scenario strong {
+  margin-right: 8px;
+}

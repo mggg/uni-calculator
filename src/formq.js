@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function FormQ(props) {
   return <form className="form-inline">
-    <div className="form-group" style={{display: 'flex', justifyContent: 'space-between', padding: "7px", background: props.percent !== undefined ? "#80A0FA" : "#fff"}}>
+    <div className="form-group" style={{display: 'flex', justifyContent: 'space-between', paddingTop: "7px", paddingBottom: "7px"}}>
       <label htmlFor={props.id}>{props.label}</label>
       <div style={{display: 'flex'}}>
         {props.percent !== undefined ? <div className="percent-block">
