@@ -228,7 +228,7 @@ class App extends React.Component {
               })}
             </select>
             <br/>
-            <small>Source: HIFLD Open GeoData, 2017-2018</small>
+            <small>Source: HIFLD Open GeoData, 2017-2018; NCES IPEDS 2018</small>
             <br/>
             <br/>
 
