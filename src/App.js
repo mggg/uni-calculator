@@ -101,8 +101,7 @@ class App extends React.Component {
         studentCampusFrequency: 7/8 * 100,
         facultyCampusFrequency: 5/8 * 100,
         staffCampusFrequency: 50,
-
-        fallContractStaff: 250,
+        fallContractStaff: Math.min(this.state.fallContractStaff, 250),
         contractCampusFrequency: 100,
         scenarioSelect: 1
       });
@@ -113,7 +112,7 @@ class App extends React.Component {
         studentCampusFrequency: 50,
         facultyCampusFrequency: 50,
         staffCampusFrequency: 80,
-        fallContractStaff: 250,
+        fallContractStaff: Math.min(this.state.fallContractStaff, 250),
         contractCampusFrequency: 100,
         scenarioSelect: 2
       });
@@ -124,7 +123,7 @@ class App extends React.Component {
         studentCampusFrequency: 8/9 * 100,
         facultyCampusFrequency: 16/65 * 100,
         staffCampusFrequency: 25,
-        fallContractStaff: 150,
+        fallContractStaff: Math.min(this.state.fallContractStaff, 150),
         contractCampusFrequency: 100,
         scenarioSelect: 3
       });
@@ -135,9 +134,18 @@ class App extends React.Component {
         studentCampusFrequency: 100,
         facultyCampusFrequency: 80,
         staffCampusFrequency: 60,
+        fallContractStaff: 0,
         contractCampusFrequency: 0,
         scenarioSelect: 4
       });
+    }
+  }
+
+  disableScenario() {
+    if (this.state.scenarioSelect === 0) {
+      return "false"
+    } else {
+      return "true"
     }
   }
 
@@ -322,6 +330,7 @@ class App extends React.Component {
             source={this.state.fallStudents}
             counts="students"
             percent="%"
+            disabled={this.disableScenario()}
             onChange={val => this.updateRawVal('fallInPerson', val * 1)}
           />
 
@@ -340,6 +349,7 @@ class App extends React.Component {
             source={this.state.normalFaculty}
             counts="members"
             percent="%"
+            disabled={this.disableScenario()}
             onChange={val => this.updateRawVal('fallFaculty', val * 1)}
           />
           <TestingSlider
@@ -357,6 +367,7 @@ class App extends React.Component {
             source={this.state.normalStaff * 1}
             counts="members"
             percent="%"
+            disabled={this.disableScenario()}
             onChange={val => this.updateRawVal('fallStaff', val)}
           />
           <TestingSlider
