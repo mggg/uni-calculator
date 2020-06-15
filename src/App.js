@@ -99,10 +99,16 @@ class App extends React.Component {
         fallStudents: (this.state.undergrad + this.state.grad) * 0.7,
         fallInPerson: (this.state.undergrad + this.state.grad) * 0.7 * 0.8,
         studentCampusFrequency: 7/8 * 100,
+
+        fallFaculty: Math.round(0.8 * this.state.normalFaculty),
         facultyCampusFrequency: 5/8 * 100,
+
+        fallStaff: Math.round(0.6 * this.state.normalStaff),
         staffCampusFrequency: 50,
-        fallContractStaff: Math.min(this.state.fallContractStaff, 250),
+
+        fallContractStaff: Math.min(this.state.contractStaff, 250),
         contractCampusFrequency: 100,
+
         scenarioSelect: 1
       });
     } else if (plan_index * 1 === 2) {
@@ -110,9 +116,14 @@ class App extends React.Component {
         fallStudents: (this.state.undergrad + this.state.grad) * 0.4,
         fallInPerson: (this.state.undergrad + this.state.grad) * 0.4 * 0.9,
         studentCampusFrequency: 50,
+
+        fallFaculty: Math.round(0.6 * this.state.normalFaculty),
         facultyCampusFrequency: 50,
+
+        fallStaff: Math.round(0.5 * this.state.normalStaff),
         staffCampusFrequency: 80,
-        fallContractStaff: Math.min(this.state.fallContractStaff, 250),
+
+        fallContractStaff: Math.min(this.state.contractStaff, 250),
         contractCampusFrequency: 100,
         scenarioSelect: 2
       });
@@ -121,9 +132,14 @@ class App extends React.Component {
         fallStudents: (this.state.undergrad + this.state.grad) * 0.85,
         fallInPerson: (this.state.undergrad + this.state.grad) * 0.85 * 0.9,
         studentCampusFrequency: 8/9 * 100,
+
+        fallFaculty: Math.round(0.65 * this.state.normalFaculty),
         facultyCampusFrequency: 16/65 * 100,
+
+        fallStaff: Math.round(0.25 * this.state.normalStaff),
         staffCampusFrequency: 25,
-        fallContractStaff: Math.min(this.state.fallContractStaff, 150),
+
+        fallContractStaff: Math.min(this.state.contractStaff, 150),
         contractCampusFrequency: 100,
         scenarioSelect: 3
       });
@@ -132,8 +148,13 @@ class App extends React.Component {
         fallStudents: (this.state.undergrad + this.state.grad) * 0.9,
         fallInPerson: (this.state.undergrad + this.state.grad) * 0.9 * 0.5,
         studentCampusFrequency: 100,
+
+        fallFaculty: Math.round(0.5 * this.state.normalFaculty),
         facultyCampusFrequency: 80,
+
+        fallStaff: Math.round(0.5 * this.state.normalStaff),
         staffCampusFrequency: 60,
+
         fallContractStaff: 0,
         contractCampusFrequency: 0,
         scenarioSelect: 4
@@ -142,14 +163,12 @@ class App extends React.Component {
   }
 
   disableScenario() {
-    if (this.state.scenarioSelect === 0) {
-      return "false"
-    } else {
-      return "true"
-    }
+    return this.state.scenarioSelect * 1 !== 0;
   }
 
   render() {
+    // console.log(this.state.fallFaculty + ' / ' + this.state.normalFaculty);
+
     return (<div className="container">
       <div className="col-sm-12">
         <div style={{textAlign: 'center' }}>
@@ -310,7 +329,7 @@ class App extends React.Component {
 
         <br/>
 
-        <div class="qSection" style={{display: (this.state.scenarioSelect ? "block" : "block")}}>
+        <div className="qSection" style={{display: (this.state.scenarioSelect ? "block" : "block")}}>
           <strong>In-depth parameter selection</strong>
           <br/>
           <br/>
