@@ -33,7 +33,7 @@ class App extends React.Component {
 
       colleges: [],
 
-      costPerTest: 20.00,
+      costPerTest: 25.00,
 
       semesterLength: 80,
       highTestFrequency: 3, // this can be a decimal; every N days
@@ -407,36 +407,6 @@ class App extends React.Component {
                 <input
                   type="number"
                   lang="en"
-                  className="form-control percent-readout"
-                  min="0"
-                  value={
-                    Math.round((
-                      this.state.fallInPerson * this.state.studentCampusFrequency
-                      + this.state.fallFaculty * this.state.facultyCampusFrequency
-                      + this.state.fallStaff * this.state.staffCampusFrequency
-                      + this.state.fallContractStaff * this.state.contractCampusFrequency
-                    )
-                    / (this.state.fallInPerson + this.state.fallFaculty + this.state.fallStaff + this.state.fallContractStaff)
-                    * 10) / 10
-                  }
-                  // onChange={e => {
-                  //   this.setState({
-                  //     highTestPercent: e.target.value * 1
-                  //   })
-                  // }}
-                  disabled
-                  required
-                />
-                <div className="input-group-append">
-                  <span className="input-group-text">%</span>
-                </div>
-              </div>
-            </form>
-            <form className="form-inline" style={{display: 'inline-block'}}>
-              <div style={{display: 'flex'}}>
-                <input
-                  type="number"
-                  lang="en"
                   className="form-control"
                   min="0"
                   value={
@@ -481,34 +451,6 @@ class App extends React.Component {
           <div>
             <label>Medium-testing cohort</label>
             <br/>
-            <form className="form-inline" style={{display: 'inline-block'}}>
-              <div style={{display: 'flex'}}>
-                <input
-                  type="number"
-                  lang="en"
-                  min="0"
-                  className="form-control percent-readout"
-                  value={ Math.round(1000 - (
-                    this.state.fallInPerson * this.state.studentCampusFrequency
-                    + this.state.fallFaculty * this.state.facultyCampusFrequency
-                    + this.state.fallStaff * this.state.staffCampusFrequency
-                    + this.state.fallContractStaff * this.state.contractCampusFrequency
-                  )
-                  / (this.state.fallInPerson + this.state.fallFaculty + this.state.fallStaff + this.state.fallContractStaff)
-                 * 10) / 10}
-                  disabled="disabled"
-                  // onChange={e => {
-                  //   this.setState({
-                  //     highTestPercent: 100 - (e.target.value * 1)
-                  //   })
-                  // }}
-                  required
-                />
-                <div className="input-group-append">
-                  <span className="input-group-text">%</span>
-                </div>
-              </div>
-            </form>
             <form className="form-inline" style={{display: 'inline-block'}}>
               <div style={{display: 'flex'}}>
                 <input
