@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "dc78a236c9de9775b08215576d3ab927",
+    "revision": "eab4cfeccf985f4485be3b791ebb4d70",
     "url": "/uni-calculator/index.html"
   },
   {
-    "revision": "4528f68e1b6e6ff46b03",
+    "revision": "c157f6c2b58a7340d573",
     "url": "/uni-calculator/static/css/main.8c1b2b06.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/uni-calculator/static/js/2.45f7c8cd.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "4528f68e1b6e6ff46b03",
-    "url": "/uni-calculator/static/js/main.49ee45fe.chunk.js"
+    "revision": "c157f6c2b58a7340d573",
+    "url": "/uni-calculator/static/js/main.fd1177e9.chunk.js"
   },
   {
     "revision": "dace2951fdc5d6b1979f",
