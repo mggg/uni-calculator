@@ -12,13 +12,10 @@ export default function FormQ(props) {
             className="form-control percent-readout"
             min="0"
             max="100"
-            value={props.source
-              ? Math.round(props.value / props.source * 100)
-              : 50
-            }
+            value={props.value.toFixed(1) * 1}
             onChange={e => {
               let pct = Math.min(100, Math.max(0, e.target.value * 1));
-              props.onChange(pct / 100 * props.source);
+              props.onChange(pct);
             }}
             disabled={props.disabled}
           />
@@ -32,8 +29,18 @@ export default function FormQ(props) {
             lang="en"
             className="form-control student-block"
             min="0"
-            value={Math.round(props.value)}
-            onChange={e => props.onChange(e.target.value)}
+            value={(props.percent !== undefined)
+              ? Math.round(props.value / 100 * props.source)
+              : Math.round(props.value)
+            }
+            onChange={e => {
+              if (props.percent !== undefined) {
+                let pct = (e.target.value / props.source * 100).toFixed(1) * 1
+                props.onChange(pct);
+              } else {
+                props.onChange(e.target.value);
+              }
+            }}
             disabled={props.disabled}
         />
         <div className="input-group-append">

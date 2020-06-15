@@ -20,15 +20,15 @@ class App extends React.Component {
 
 
       normalFaculty: 0, // count of normal faculty
-      fallFaculty: 0, // count of fall faculty (appearing weekly or more)
-      facultyCampusFrequency: 50, // this is a %
+      fallFacultyPct: 50, // % of all faculty returning 1+/weekly to campus
+      facultyCampusFrequency: 50, // % of fall faculty appearing in medium vs. high group
 
       normalStaff: 0,
-      fallStaff: 0,
+      fallStaffPct: 50,
       staffCampusFrequency: 50, // %
 
       contractStaff: 0,
-      fallContractStaff: 0,
+      fallContractStaffPct: 0,
       contractCampusFrequency: 50, // %
 
       colleges: [],
@@ -100,13 +100,13 @@ class App extends React.Component {
         fallInPerson: (this.state.undergrad + this.state.grad) * 0.7 * 0.8,
         studentCampusFrequency: 7/8 * 100,
 
-        fallFaculty: Math.round(0.8 * this.state.normalFaculty),
+        fallFacultyPct: 80,
         facultyCampusFrequency: 5/8 * 100,
 
-        fallStaff: Math.round(0.6 * this.state.normalStaff),
+        fallStaffPct: 60,
         staffCampusFrequency: 50,
 
-        fallContractStaff: Math.min(this.state.contractStaff, 250),
+        fallContractStaffPct: Math.min(100, 250 / this.state.contractStaff * 100),
         contractCampusFrequency: 100,
 
         scenarioSelect: 1
@@ -117,13 +117,13 @@ class App extends React.Component {
         fallInPerson: (this.state.undergrad + this.state.grad) * 0.4 * 0.9,
         studentCampusFrequency: 50,
 
-        fallFaculty: Math.round(0.6 * this.state.normalFaculty),
+        fallFacultyPct: 60,
         facultyCampusFrequency: 50,
 
-        fallStaff: Math.round(0.5 * this.state.normalStaff),
+        fallStaffPct: 50,
         staffCampusFrequency: 80,
 
-        fallContractStaff: Math.min(this.state.contractStaff, 250),
+        fallContractStaffPct: Math.min(100, 100 * this.state.contractStaff / 250),
         contractCampusFrequency: 100,
         scenarioSelect: 2
       });
@@ -133,13 +133,13 @@ class App extends React.Component {
         fallInPerson: (this.state.undergrad + this.state.grad) * 0.85 * 0.9,
         studentCampusFrequency: 8/9 * 100,
 
-        fallFaculty: Math.round(0.65 * this.state.normalFaculty),
+        fallFacultyPct: 65,
         facultyCampusFrequency: 16/65 * 100,
 
-        fallStaff: Math.round(0.25 * this.state.normalStaff),
+        fallStaffPct: 25,
         staffCampusFrequency: 25,
 
-        fallContractStaff: Math.min(this.state.contractStaff, 150),
+        fallContractStaffPct: Math.min(100, 100 * this.state.contractStaff / 150),
         contractCampusFrequency: 100,
         scenarioSelect: 3
       });
@@ -149,13 +149,13 @@ class App extends React.Component {
         fallInPerson: (this.state.undergrad + this.state.grad) * 0.9 * 0.5,
         studentCampusFrequency: 100,
 
-        fallFaculty: Math.round(0.5 * this.state.normalFaculty),
+        fallFacultyPct: 50,
         facultyCampusFrequency: 80,
 
-        fallStaff: Math.round(0.5 * this.state.normalStaff),
+        fallStaffPct: 50,
         staffCampusFrequency: 60,
 
-        fallContractStaff: 0,
+        fallContractStaffPct: 0,
         contractCampusFrequency: 0,
         scenarioSelect: 4
       });
@@ -365,12 +365,12 @@ class App extends React.Component {
           <FormQ
             id="studentfacing"
             label="Tenure-stream faculty on campus weekly in Fall"
-            value={this.state.fallFaculty}
+            value={this.state.fallFacultyPct}
             source={this.state.normalFaculty}
             counts="members"
             percent="%"
             disabled={this.disableScenario()}
-            onChange={val => this.updateRawVal('fallFaculty', val * 1)}
+            onChange={val => this.updateRawVal('fallFacultyPct', val * 1)}
           />
           <TestingSlider
             label="Faculty campus-visit frequency"
@@ -383,12 +383,12 @@ class App extends React.Component {
           <FormQ
             id="projectstaff"
             label="University-employed staff on campus weekly in Fall"
-            value={this.state.fallStaff}
+            value={this.state.fallStaffPct}
             source={this.state.normalStaff * 1}
             counts="members"
             percent="%"
             disabled={this.disableScenario()}
-            onChange={val => this.updateRawVal('fallStaff', val)}
+            onChange={val => this.updateRawVal('fallStaffPct', val)}
           />
           <TestingSlider
             label="Staff campus-visit frequency"
@@ -401,11 +401,11 @@ class App extends React.Component {
           <FormQ
             id="contractstaff"
             label="Contract staff on campus weekly in Fall"
-            value={this.state.fallContractStaff}
+            value={this.state.fallContractStaffPct}
             source={this.state.contractStaff * 1}
             counts="members"
             percent="%"
-            onChange={val => this.updateRawVal('fallContractStaff', val)}
+            onChange={val => this.updateRawVal('fallContractStaffPct', val)}
           />
         </div>
 
@@ -427,9 +427,9 @@ class App extends React.Component {
                   value={
                     Math.round((
                       this.state.fallInPerson * this.state.studentCampusFrequency
-                      + this.state.fallFaculty * this.state.facultyCampusFrequency
-                      + this.state.fallStaff * this.state.staffCampusFrequency
-                      + this.state.fallContractStaff * this.state.contractCampusFrequency
+                      + this.state.fallFacultyPct/100 * this.state.normalFaculty * this.state.facultyCampusFrequency
+                      + this.state.fallStaffPct/100 * this.state.normalStaff * this.state.staffCampusFrequency
+                      + this.state.fallContractStaffPct/100 * this.state.contractStaff * this.state.contractCampusFrequency
                     ) / 100)
                   }
                   disabled="disabled"
@@ -476,9 +476,9 @@ class App extends React.Component {
                   value={
                     Math.round((
                       this.state.fallInPerson * (100 - this.state.studentCampusFrequency)
-                      + this.state.fallFaculty * (100 - this.state.facultyCampusFrequency)
-                      + this.state.fallStaff * (100 - this.state.staffCampusFrequency)
-                      + this.state.fallContractStaff * (100 - this.state.contractCampusFrequency)
+                      + this.state.fallFacultyPct/100 * this.state.normalFaculty * (100 - this.state.facultyCampusFrequency)
+                      + this.state.fallStaffPct/100 * this.state.normalStaff * (100 - this.state.staffCampusFrequency)
+                      + this.state.fallContractStaffPct/100 * this.state.contractStaff * (100 - this.state.contractCampusFrequency)
                     ) / 100)
                   }
                   disabled="disabled"
@@ -567,7 +567,7 @@ class App extends React.Component {
             ? <div style={{marginLeft:"15%", marginRight: "15%"}}>
               <h4>Outcomes</h4>
               <div style={{color: 'red'}}>
-                {["semesterLength", "highTestFrequency", "costPerTest", "mediumTestFrequency", "fallStaff", "fallFaculty", "fallStudents", "fallInPerson"].map((key) => {
+                {["semesterLength", "highTestFrequency", "costPerTest", "mediumTestFrequency", "fallStaffPct", "fallFacultyPct", "fallStudents", "fallInPerson"].map((key) => {
                   return (this.state[key] * 1) ? null : "Non-numeric value for: " + key;
                 })}
               </div>
@@ -592,17 +592,17 @@ class App extends React.Component {
                 {Math.round(this.state.costPerTest * this.state.semesterLength / 100 * (
 
                   ((this.state.fallInPerson * (100 - this.state.studentCampusFrequency)
-                  + this.state.fallFaculty * (100 - this.state.facultyCampusFrequency)
-                  + this.state.fallStaff * (100 - this.state.staffCampusFrequency)
-                  + this.state.fallContractStaff * (100 - this.state.contractCampusFrequency))
+                  + this.state.fallFacultyPct/100 * this.state.normalFaculty * (100 - this.state.facultyCampusFrequency)
+                  + this.state.fallStaffPct/100 * this.state.normalStaff * (100 - this.state.staffCampusFrequency)
+                  + this.state.fallContractStaffPct/100 * this.state.contractStaff * (100 - this.state.contractCampusFrequency))
                   / this.state.mediumTestFrequency)
 
                   +
 
                   ((this.state.fallInPerson * this.state.studentCampusFrequency
-                  + this.state.fallFaculty * this.state.facultyCampusFrequency
-                  + this.state.fallStaff * this.state.staffCampusFrequency
-                  + this.state.fallContractStaff * this.state.contractCampusFrequency)
+                  + this.state.fallFacultyPct/100 * this.state.normalFaculty * this.state.facultyCampusFrequency
+                  + this.state.fallStaffPct/100 * this.state.normalStaff * this.state.staffCampusFrequency
+                  + this.state.fallContractStaffPct/100 * this.state.contractStaff * this.state.contractCampusFrequency)
                   / this.state.highTestFrequency)
                 )).toLocaleString()}</strong>
               </div>
