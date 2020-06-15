@@ -66,9 +66,12 @@ a {
   display: flex;
   margin-right: 15px;
 }
+input {
+  max-width: 100px !important;
+}
 .cohorts input {
   border-radius: 0;
-  width: 150px !important;
+  width: 100px !important;
 }
 .percent-readout, .cohorts input.percent-readout {
   width: 100px !important;
@@ -111,4 +114,23 @@ label.scenario strong {
 
 .suggestions h3 {
   text-align: center;
+}
+.middleText {
+  height: 100%;
+  padding-top: 10px;
+  padding-left: 6px;
+  margin-right: -7px;
+}
+
+td em {
+  font-size: 80%;
+  font-weight: 400;
+}
+td small {
+  padding-right: 15px;
+  display: block;
+  line-height: 180%;
+}
+table {
+  margin-bottom: 40px;
 }

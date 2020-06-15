@@ -1,7 +1,8 @@
 import React from 'react';
 import FormQ from './formq';
 import Scenario from './scenario';
-import TestingSlider from './slider';
+import TestingSplit from './splitter';
+import TestingSplit2 from './splitter2';
 import './App.css';
 
 class App extends React.Component {
@@ -10,14 +11,21 @@ class App extends React.Component {
 
     this.state = {
       scenarioSelect: 0, // 0 = make-your-own
+      revealLongform: false, // set to true to see calculator open
+      revealFinal: false, // reveal final math
+
+      quickHighCount: 400,
+      quickMediumCount: 400,
 
       undergrad: 800,
       grad: 200,
-      beds: 1000,
+      residential: 50, // % of undergrads to dorms
       fallStudentsPct: 80, // % of students who re-enrolled
       fallInPersonPct: 100, // % of students coming in weekly
       studentCampusFrequency: 50,
 
+      gradCountHigh: 60,
+      gradCountMed: 0,
 
       normalFaculty: 0, // count of normal faculty
       fallFacultyPct: 50, // % of all faculty returning 1+/weekly to campus
@@ -28,8 +36,8 @@ class App extends React.Component {
       staffCampusFrequency: 50, // %
 
       contractStaff: 0,
-      fallContractStaffPct: 50,
-      contractCampusFrequency: 100, // %
+      contractCountHigh: 0,
+      contractCountMed: 0,
 
       colleges: [],
 
@@ -38,8 +46,6 @@ class App extends React.Component {
       semesterLength: 80,
       highTestFrequency: 3, // this can be a decimal; every N days
       mediumTestFrequency: 7, // this can be a decmimal; every N days
-
-      reveal: false
     }
 
     this.updateRawVal = this.updateRawVal.bind(this);
@@ -62,7 +68,7 @@ class App extends React.Component {
           undergrad: cols[headers.indexOf("Undergraduate enrollment")] * 1,
           grad: cols[headers.indexOf("Graduate enrollment")] * 1,
           // enrollment: cols[headers.indexOf("Total enrollment")] * 1,
-          dorms: cols[headers.indexOf("Dorm capacity")] * 1
+          residential: Math.min(100, 100 * (cols[headers.indexOf("Dorm capacity")] * 1) / (cols[headers.indexOf("Undergraduate enrollment")] * 1))
         });
       });
       c2.sort((a, b) => {
@@ -74,7 +80,7 @@ class App extends React.Component {
   }
 
   updateRawVal(key, origVal) {
-    let ob = {};
+    let ob = { revealFinal: false };
     ob[key] = origVal;
     this.setState(ob);
   }
@@ -85,79 +91,82 @@ class App extends React.Component {
       undergrad: college.undergrad,
       grad: college.grad,
       fallStudentsPct: 100,
-      beds: college.dorms,
+      residential: college.residential,
+      revealFinal: false
     });
   }
 
   preplan(plan_index) {
     if (plan_index * 1 === 0) {
       this.setState({
-        scenarioSelect: 0
+        scenarioSelect: 0,
+        revealFinal: false,
       });
     } else if (plan_index * 1 === 1) {
       this.setState({
         fallStudentsPct: 70,
         fallInPersonPct: 80,
-        studentCampusFrequency: 7/8 * 100,
+        studentCampusFrequency: 70,
 
         fallFacultyPct: 80,
-        facultyCampusFrequency: 5/8 * 100,
+        facultyCampusFrequency: 50,
 
         fallStaffPct: 60,
         staffCampusFrequency: 50,
 
-        fallContractStaffPct: Math.min(100, 250 / this.state.contractStaff * 100),
-        contractCampusFrequency: 100,
+        contractCountHigh: Math.min(this.state.contractStaff, 250),
 
-        scenarioSelect: 1
+        scenarioSelect: 1,
+        revealFinal: false,
       });
     } else if (plan_index * 1 === 2) {
       this.setState({
         fallStudentsPct: 40,
         fallInPersonPct: 90,
-        studentCampusFrequency: 50,
+        studentCampusFrequency: 45,
 
         fallFacultyPct: 60,
-        facultyCampusFrequency: 50,
+        facultyCampusFrequency: 30,
 
         fallStaffPct: 50,
-        staffCampusFrequency: 80,
+        staffCampusFrequency: 40,
 
-        fallContractStaffPct: Math.min(100, 100 * this.state.contractStaff / 250),
-        contractCampusFrequency: 100,
-        scenarioSelect: 2
+        contractCountHigh: Math.min(this.state.contractStaff, 100),
+
+        scenarioSelect: 2,
+        revealFinal: false,
       });
     } else if (plan_index * 1 === 3) {
       this.setState({
         fallStudentsPct: 85,
         fallInPersonPct: 90,
-        studentCampusFrequency: 8/9 * 100,
+        studentCampusFrequency: 80,
 
         fallFacultyPct: 65,
-        facultyCampusFrequency: 16/65 * 100,
+        facultyCampusFrequency: 15,
 
         fallStaffPct: 25,
         staffCampusFrequency: 25,
 
-        fallContractStaffPct: Math.min(100, 100 * this.state.contractStaff / 150),
-        contractCampusFrequency: 100,
-        scenarioSelect: 3
+        contractCountHigh: Math.min(this.state.contractStaff, 100),
+        scenarioSelect: 3,
+        revealFinal: false,
       });
     } else if (plan_index * 1 === 4) {
       this.setState({
         fallStudentsPct: 90,
         fallInPersonPct: 50,
-        studentCampusFrequency: 100,
+        studentCampusFrequency: 50,
 
         fallFacultyPct: 50,
-        facultyCampusFrequency: 80,
+        facultyCampusFrequency: 40,
 
         fallStaffPct: 50,
-        staffCampusFrequency: 60,
+        staffCampusFrequency: 30,
 
-        fallContractStaffPct: 0,
-        contractCampusFrequency: 100,
-        scenarioSelect: 4
+        contractCountHigh: 0,
+        scenarioSelect: 4,
+        revealFinal: false,
       });
     }
   }
@@ -167,7 +176,17 @@ class App extends React.Component {
   }
 
   render() {
-    // console.log(this.state.fallFaculty + ' / ' + this.state.normalFaculty);
+
+    let highTestCount = (this.state.fallStudentsPct/100 * this.state.studentCampusFrequency/100 * this.state.undergrad
+    + this.state.fallFacultyPct/100 * this.state.facultyCampusFrequency/100 * this.state.normalFaculty
+    + this.state.fallStaffPct/100 * this.state.staffCampusFrequency/100 * this.state.normalStaff
+    + this.state.gradCountHigh
+    + this.state.contractCountHigh);
+    let mediumTestCount = (this.state.fallStudentsPct/100 * (1-this.state.studentCampusFrequency/100) * this.state.undergrad
+    + this.state.fallFacultyPct/100 * (1-this.state.facultyCampusFrequency/100) * this.state.normalFaculty
+    + this.state.fallStaffPct/100 * (1-this.state.staffCampusFrequency/100) * this.state.normalStaff
+    + this.state.gradCountMed
+    + this.state.contractCountMed);
 
     return (<div className="container">
       <div className="col-sm-12">
@@ -194,226 +213,259 @@ class App extends React.Component {
           </section>
         </div>
 
-        <hr id="separator"></hr>
+        <div style={{ display: this.state.revealLongform ? "block" : "none" }}>
+          <hr id="separator"></hr>
 
-        <div className="qSection prefill">
-          <h3>Load data for a university</h3>
-          <small>Source: HIFLD Open GeoData, 2017-2018</small>
+          <div className="qSection prefill">
+            <h3>Load data for a university</h3>
+            <br/>
+            University &nbsp;&nbsp;
+            <select onChange={e => this.prefill(e.target.value)}>
+              {this.state.colleges.map((c, i) => {
+                return <option key={i} value={i}>
+                  {c.name}
+                </option>
+              })}
+            </select>
+            <br/>
+            <small>Source: HIFLD Open GeoData, 2017-2018</small>
+            <br/>
+            <br/>
+
+
+            <h4>Students</h4>
+            <FormQ
+              id="undergrad"
+              label="Usual undergraduate enrollment"
+              value={this.state.undergrad}
+              counts="students"
+              onChange={val => this.updateRawVal('undergrad', val * 1)}
+            />
+            <FormQ
+              id="grad"
+              label="Usual graduate enrollment"
+              value={this.state.grad}
+              counts="students"
+              onChange={val => this.updateRawVal('grad', val * 1)}
+            />
+            <FormQ
+              id="residential"
+              label="Usual residential percentage"
+              value={this.state.residential}
+              counts="%"
+              onChange={val => this.updateRawVal('residential', Math.min(100, Math.max(0, val * 1)))}
+            />
+          </div>
+
+          <div className="qSection prefill">
+            <br/>
+            <strong>Correct the numbers above to match actual values. Datasets may be out of date, may include multiple campuses, etc.</strong>
+            <br/><br/>
+
+            <h4>Faculty</h4>
+            <FormQ
+              id="faculty"
+              label="Regular faculty"
+              value={this.state.normalFaculty}
+              counts="members"
+              onChange={val => this.updateRawVal('normalFaculty', val * 1)}
+            />
+          </div>
+
+          <div className="qSection prefill">
+            <h4>Staff</h4>
+            <FormQ
+              id="staff"
+              label="On-campus staff, university-employed"
+              value={this.state.normalStaff}
+              counts="members"
+              onChange={val => this.updateRawVal('normalStaff', val * 1)}
+            />
+            <FormQ
+              id="contract"
+              label="On-campus staff, contract (incl. part-time instructors)"
+              value={this.state.contractStaff}
+              counts="members"
+              onChange={val => this.updateRawVal('contractStaff', val * 1)}
+            />
+          </div>
+
+          <hr id="separator"></hr>
+
+          <div className="qSection">
+            <section>
+              <h3>Scenarios</h3>
+              <p>All parameters will be customizable below, but we begin with the assumption of
+              an 80-day semester, which is a working hypothesis for many schools.</p>
+              <p>We will build a HIGH testing cohort (those coming to campus at least 3 days per week)
+              and a MEDIUM testing cohort (those coming to campus 1-2 days per week).
+              Other testing should be handled by a LOW testing cohort which includes some occasional
+              and some ad hoc testing, but we leave that out of this calculation because bulk
+              testing options will probably not be available for low-testing/ad hoc group.</p>
+
+              <Scenario
+                id={1}
+                selected={this.state.scenarioSelect}
+                onSelect={this.preplan}
+                headline="A large highly residential university."
+                body="The student life is very campus-centric and there are a large number of grant-funded research labs that need staffing.  A large number of students are from overseas and are unlikely to be able to return to campus in person."
+              />
+
+              <Scenario
+                id={2}
+                selected={this.state.scenarioSelect}
+                onSelect={this.preplan}
+                headline="A large, less-residential university."
+                body="In normal times, many students commute.  Larger number of part-time and adjunct-style instructional staff."
+              />
+
+              <Scenario
+                id={3}
+                selected={this.state.scenarioSelect}
+                onSelect={this.preplan}
+                headline="A medium university with graduate programs."
+                body="This campus has a very limited number of adjunct-style instructional faculty. However, a substantial share of the tenure-stream faculty are electing for either all-virtual instruction or for hybrid teaching with one day per week on campus. The campus-employed staff can mostly work from home, and only a small number of staff are deemed essential for lab research operations."
+              />
+
+              <Scenario
+                id={4}
+                selected={this.state.scenarioSelect}
+                onSelect={this.preplan}
+                headline="A small college with very high residency rate and limited dormitory space,"
+                body="so no feasible options for de-densification at full residency. A decision has been made to limit campus residency to first- and fourth-years, with all second- and third-years studying virtually."
+              />
+
+              <Scenario
+                id={0}
+                selected={this.state.scenarioSelect}
+                onSelect={this.preplan}
+                headline="Build Your Own Scenario"
+                body=""
+              />
+            </section>
+          </div>
+
           <br/>
-          <small>One university may include multiple campuses</small>
-          <br/>
-          <br/>
-          University &nbsp;&nbsp;
-          <select onChange={e => this.prefill(e.target.value)}>
-            {this.state.colleges.map((c, i) => {
-              return <option key={i} value={i}>
-                {c.name}
-              </option>
-            })}
-          </select>
-          <br/>
-          <br/>
 
+          <div className="qSection" style={{display: (this.state.scenarioSelect ? "block" : "block")}}>
+            <br/>
 
-          <h4>Students</h4>
-          <FormQ
-            id="undergrad"
-            label="Undergraduate enrollment"
-            value={this.state.undergrad}
-            counts="students"
-            onChange={val => this.updateRawVal('undergrad', val * 1)}
-          />
-          <FormQ
-            id="grad"
-            label="Graduate enrollment"
-            value={this.state.grad}
-            counts="students"
-            onChange={val => this.updateRawVal('grad', val * 1)}
-          />
-          <FormQ
-            id="dorms"
-            label="Dormitory capacity"
-            value={this.state.beds}
-            counts="beds"
-            onChange={val => this.updateRawVal('beds', val * 1)}
-          />
-        </div>
+            <FormQ
+              id="fall"
+              label="Projected student enrollment in fall"
+              value={this.state.fallStudentsPct}
+              source={this.state.undergrad + this.state.grad}
+              middleText="of normal enrollment ="
+              counts="students"
+              percent="%"
+              onChange={val => this.updateRawVal('fallStudentsPct', val * 1)}
+              help="This is the percent of normal student headcount you expect to enroll and pay tuition this fall. If total enrollment is projected at 80% of usual, put 80 in the first box."
+            />
+            <h5>ENROLLED UNDERGRADUATE STUDENTS
+              <br/>
+              <em>Reminder: normal undergraduate enrollment is&nbsp;
+                {(this.state.undergrad + this.state.grad).toLocaleString()}
+              </em>
+            </h5>
 
-        <div className="qSection prefill">
-          <br/>
-          <strong>Provide numbers of faculty and staff</strong>
-          <br/><br/>
-
-          <h4>Faculty</h4>
-          <FormQ
-            id="faculty"
-            label="Normal faculty"
-            value={this.state.normalFaculty}
-            counts="members"
-            onChange={val => this.updateRawVal('normalFaculty', val * 1)}
-          />
-        </div>
-
-        <div className="qSection prefill">
-          <h4>Staff</h4>
-          <FormQ
-            id="staff"
-            label="On-campus staff, university-employed"
-            value={this.state.normalStaff}
-            counts="members"
-            onChange={val => this.updateRawVal('normalStaff', val * 1)}
-          />
-          <FormQ
-            id="contract"
-            label="On-campus staff, contract"
-            value={this.state.contractStaff}
-            counts="members"
-            onChange={val => this.updateRawVal('contractStaff', val * 1)}
-          />
-        </div>
-
-        <hr id="separator"></hr>
-
-        <div className="qSection">
-          <section>
-            <h3>Scenarios</h3>
-            <p>All parameters will be customizable below, but we begin with the assumption of
-            an 80-day semester, which is a working hypothesis for many schools.</p>
-            <p>We will build a HIGH testing cohort (those coming to campus at least 3 days per week)
-            and a MEDIUM testing cohort (those coming to campus 1-2 days per week).
-            Other testing should be handled by a LOW testing cohort which includes some occasional
-            and some ad hoc testing, but we leave that out of this calculation because bulk
-            testing options will probably not be available for low-testing/ad hoc group.</p>
-
-            <Scenario
-              id={1}
-              selected={this.state.scenarioSelect}
-              onSelect={this.preplan}
-              headline="A large highly residential university."
-              body="The student life is very campus-centric and there are a large number of grant-funded research labs that need staffing.  A large number of students are from overseas and are unlikely to be able to return to campus in person."
+            <TestingSplit
+              help={[
+                "This is the percent of students enrolled in the fall that you think will come to campus at least 3 times a week. If you think 25% of enrolled students will come to campus 3+ times a week, enter 25 in the box above.  Use residency percentage as a guide.",
+                "This is the percent of students enrolled in the fall that you think will come to campus 1-2 times a week. If you think 50% of enrolled students will come to campus 1-2 times a week, enter 50 in the box above.",
+                "This is the percent of students enrolled in the fall that you think will be completely remote (coming to campus less than once a week). If you think 25% of enrolled students will rarely or never come to campus in person, enter 25 in the box above."
+              ]}
+              inPersonPct={this.state.fallInPersonPct}
+              highFrequencyPct={this.state.studentCampusFrequency}
+              onChange={(a, b) => this.setState({
+                fallInPersonPct: a * 1,
+                studentCampusFrequency: b * 1,
+                revealFinal: false
+              })}
             />
 
-            <Scenario
-              id={2}
-              selected={this.state.scenarioSelect}
-              onSelect={this.preplan}
-              headline="A large, less-residential university."
-              body="In normal times, many students commute.  Larger number of part-time and adjunct-style instructional staff."
+            <hr/>
+            <h5>FACULTY</h5>
+            <TestingSplit
+              help={[
+                "Student-facing faculty who are at higher risk for severe illness.",
+                "Student-facing faculty not in the high test cohort",
+                "Faculty who are not student-facing"
+              ]}
+              inPersonPct={this.state.fallFacultyPct}
+              highFrequencyPct={this.state.facultyCampusFrequency}
+              onChange={(a, b) => this.setState({
+                fallFacultyPct: a * 1,
+                facultyCampusFrequency: b * 1,
+                revealFinal: false
+              })}
             />
 
-            <Scenario
-              id={3}
-              selected={this.state.scenarioSelect}
-              onSelect={this.preplan}
-              headline="A medium university with graduate programs."
-              body="This campus has a very limited number of adjunct-style instructional faculty. However, a substantial share of the tenure-stream faculty are electing for either all-virtual instruction or for hybrid teaching with one day per week on campus. The campus-employed staff can mostly work from home, and only a small number of staff are deemed essential for lab research operations."
+            <hr/>
+            <h5>UNIVERSITY-EMPLOYED STAFF</h5>
+            <TestingSplit
+              help={[
+                "Student-facing staff who are at higher risk for severe illness.",
+                "Student-facing staff not in the high test cohort",
+                "Staff who are not student-facing"
+              ]}
+              inPersonPct={this.state.fallStaffPct}
+              highFrequencyPct={this.state.staffCampusFrequency}
+              onChange={(a, b) => this.setState({
+                fallStaffPct: a * 1,
+                staffCampusFrequency: b * 1,
+                revealFinal: false,
+              })}
             />
 
-            <Scenario
-              id={4}
-              selected={this.state.scenarioSelect}
-              onSelect={this.preplan}
-              headline="A small college with very high residency rate and limited dormitory space,"
-              body="so no feasible options for de-densification at full residency. A decision has been made to limit campus residency to first- and fourth-years, with all second- and third-years studying virtually."
+            <hr/>
+
+            <h5>GRADUATE STUDENTS</h5>
+            <TestingSplit2
+              help={[
+                "How many graduate students will come to campus at least 3x/week?  For instance, grads who work in high-contact labs, or grads with heavy teaching.",
+                "How many graduate students will come to campus 1-2 times/week?  For instance, grads with lighter teaching or who will attend a small number of in-person classes."
+              ]}
+              total={this.state.grad}
+              plural="graduate students"
+              highFreqCount={this.state.gradCountHigh}
+              medFreqCount={this.state.gradCountMed}
+              onChange={(a, b) => this.setState({
+                gradCountHigh: a * 1,
+                gradCountMed: b * 1,
+                revealFinal: false
+              })}
             />
 
-            <Scenario
-              id={0}
-              selected={this.state.scenarioSelect}
-              onSelect={this.preplan}
-              headline="Build Your Own Scenario"
-              body=""
+            <hr/>
+
+            <h5>CONTRACT STAFF</h5>
+            <TestingSplit2
+              help={[
+                "How many contract staff will come to campus at least 3x/week?  For instance, dining hall and janitorial staff with heavy schedules.",
+                "How many contract staff will come to campus 1-2 times/week?"
+              ]}
+              total={this.state.contractStaff}
+              plural="contract staff"
+              highFreqCount={this.state.contractCountHigh}
+              medFreqCount={this.state.contractCountMed}
+              onChange={(a, b) => this.setState({
+                contractCountHigh: a * 1,
+                contractCountMed: b * 1,
+                revealFinal: false,
+              })}
             />
-          </section>
+
+          </div>
+
         </div>
-
-        <br/>
-
-        <div className="qSection" style={{display: (this.state.scenarioSelect ? "block" : "block")}}>
-          <strong>In-depth parameter selection</strong>
-          <br/>
-          <br/>
-
-          <FormQ
-            id="fall"
-            label="Projected student enrollment in fall"
-            value={this.state.fallStudentsPct}
-            source={this.state.undergrad + this.state.grad}
-            counts="students"
-            percent="%"
-            onChange={val => this.updateRawVal('fallStudentsPct', val * 1)}
-          />
-          <FormQ
-            id="fall"
-            label="Projected weekly on-campus students"
-            value={this.state.fallInPersonPct}
-            source={this.state.fallStudentsPct * (this.state.undergrad + this.state.grad) / 100}
-            counts="students"
-            percent="%"
-            disabled={this.disableScenario()}
-            onChange={val => this.updateRawVal('fallInPersonPct', val * 1)}
-          />
-
-          <TestingSlider
-            label="Student campus-visit frequency"
-            value={this.state.studentCampusFrequency}
-            onChange={e => this.setState({ studentCampusFrequency: e.target.value * 1 })}
-          />
-
-          <hr/>
-
-          <FormQ
-            id="studentfacing"
-            label="Tenure-stream faculty on campus weekly in Fall"
-            value={this.state.fallFacultyPct}
-            source={this.state.normalFaculty}
-            counts="members"
-            percent="%"
-            disabled={this.disableScenario()}
-            onChange={val => this.updateRawVal('fallFacultyPct', val * 1)}
-          />
-          <TestingSlider
-            label="Faculty campus-visit frequency"
-            value={this.state.facultyCampusFrequency}
-            onChange={e => this.setState({ facultyCampusFrequency: e.target.value * 1 })}
-          />
-
-          <hr/>
-
-          <FormQ
-            id="projectstaff"
-            label="University-employed staff on campus weekly in Fall"
-            value={this.state.fallStaffPct}
-            source={this.state.normalStaff * 1}
-            counts="members"
-            percent="%"
-            disabled={this.disableScenario()}
-            onChange={val => this.updateRawVal('fallStaffPct', val)}
-          />
-          <TestingSlider
-            label="Staff campus-visit frequency"
-            value={this.state.staffCampusFrequency}
-            onChange={e => this.setState({ staffCampusFrequency: e.target.value * 1 })}
-          />
-
-          <hr/>
-
-          <FormQ
-            id="contractstaff"
-            label="Contract staff on campus weekly in Fall"
-            value={this.state.fallContractStaffPct}
-            source={this.state.contractStaff * 1}
-            counts="members"
-            percent="%"
-            onChange={val => this.updateRawVal('fallContractStaffPct', val)}
-          />
+        <div>
+          <div className="qSection">
+            <hr id="separator"></hr>
+            <h4>Quick Calculator</h4>
+          </div>
         </div>
-
-        <hr id="separator"></hr>
 
         <div className="qSection cohorts">
-          <h4>Testing</h4>
-          When all groups are combined,
           <div>
             <label>High-testing cohort</label>
             <br/>
@@ -425,14 +477,17 @@ class App extends React.Component {
                   className="form-control"
                   min="0"
                   value={
-                    Math.round((
-                      this.state.fallInPersonPct/100 * this.state.fallStudentsPct/100 * (this.state.undergrad + this.state.grad) * this.state.studentCampusFrequency
-                      + this.state.fallFacultyPct/100 * this.state.normalFaculty * this.state.facultyCampusFrequency
-                      + this.state.fallStaffPct/100 * this.state.normalStaff * this.state.staffCampusFrequency
-                      + this.state.fallContractStaffPct/100 * this.state.contractStaff * this.state.contractCampusFrequency
-                    ) / 100)
+                    this.state.revealLongform
+                    ? Math.round(highTestCount)
+                    : this.state.quickHighCount
                   }
-                  disabled="disabled"
+                  onChange={(e) => {
+                    this.setState({
+                      quickHighCount: e.target.value * 1,
+                      revealFinal: false,
+                    })
+                  }}
+                  disabled={this.state.revealLongform}
                   required
                 />
                 <div className="input-group-append">
@@ -453,7 +508,8 @@ class App extends React.Component {
                   value={this.state.highTestFrequency}
                   onChange={e => {
                     this.setState({
-                      highTestFrequency: e.target.value
+                      highTestFrequency: e.target.value,
+                      revealFinal: false,
                     })
                   }}
                 required/>
@@ -474,14 +530,17 @@ class App extends React.Component {
                   className="form-control"
                   min="0"
                   value={
-                    Math.round((
-                      this.state.fallInPersonPct/100 * this.state.fallStudentsPct/100 * (this.state.undergrad + this.state.grad) * (100 - this.state.studentCampusFrequency)
-                      + this.state.fallFacultyPct/100 * this.state.normalFaculty * (100 - this.state.facultyCampusFrequency)
-                      + this.state.fallStaffPct/100 * this.state.normalStaff * (100 - this.state.staffCampusFrequency)
-                      + this.state.fallContractStaffPct/100 * this.state.contractStaff * (100 - this.state.contractCampusFrequency)
-                    ) / 100)
+                    this.state.revealLongform
+                    ? Math.round(mediumTestCount)
+                    : this.state.quickMediumCount
                   }
-                  disabled="disabled"
+                  onChange={(e) => {
+                    this.setState({
+                      quickMediumCount: e.target.value * 1,
+                      revealFinal: false,
+                    })
+                  }}
+                  disabled={this.state.revealLongform}
                   required
                 />
                 <div className="input-group-append">
@@ -502,7 +561,8 @@ class App extends React.Component {
                   value={this.state.mediumTestFrequency}
                   onChange={e => {
                     this.setState({
-                      mediumTestFrequency: e.target.value
+                      mediumTestFrequency: e.target.value,
+                      revealFinal: false,
                     })
                   }}
                 required/>
@@ -511,6 +571,14 @@ class App extends React.Component {
                 </div>
               </div>
             </form>
+
+            <div style={{ display: this.state.revealLongform ? "none" : "block" }}>
+              Not sure how to get these numbers?&nbsp;&nbsp;&nbsp;&nbsp;
+              <button className="btn btn-large btn-primary" onClick={e => this.setState({
+                revealLongform: true,
+                revealFinal: false,
+              })}>Click here for scenario worksheet</button>
+            </div>
           </div>
           <hr/>
           <div style={{width:"60%", display:"flex", justifyContent: "space-between"}}>
@@ -563,12 +631,17 @@ class App extends React.Component {
         </div>
 
         <div style={{background: '#eee', textAlign: 'center', paddingTop: "10px", paddingBottom: "15px"}}>
-          {this.state.reveal
+          {this.state.revealFinal
             ? <div style={{marginLeft:"15%", marginRight: "15%"}}>
               <h4>Outcomes</h4>
               <div style={{color: 'red'}}>
-                {["semesterLength", "highTestFrequency", "costPerTest", "mediumTestFrequency", "fallStaffPct", "fallFacultyPct", "fallStudentPct", "fallInPersonPct"].map((key) => {
-                  return (this.state[key] * 1) ? null : "Non-numeric value for: " + key;
+                {["fallStudentsPct", "studentCampusFrequency", "undergrad",
+                  "fallFacultyPct", "facultyCampusFrequency", "normalFaculty",
+                  "fallStaffPct", "staffCampusFrequency", "normalStaff",
+                  "gradCountHigh", "gradCountMed",
+                  "contractCountHigh", "contractCountMed"
+                ].map((key) => {
+                  return (!isNaN(this.state[key] * 1)) ? null : "Non-numeric value for: " + key;
                 })}
               </div>
               <div style={{display: 'flex', justifyContent: 'space-between'}}>
@@ -589,25 +662,15 @@ class App extends React.Component {
               <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '85%'}}>
                 Total cost
                 <strong>$
-                {Math.round(this.state.costPerTest * this.state.semesterLength / 100 * (
-
-                  ((this.state.fallInPersonPct/100 * this.state.fallStudentsPct/100 * (this.state.undergrad * 1 + this.state.grad * 1) * (100 - this.state.studentCampusFrequency)
-                  + this.state.fallFacultyPct/100 * this.state.normalFaculty * (100 - this.state.facultyCampusFrequency)
-                  + this.state.fallStaffPct/100 * this.state.normalStaff * (100 - this.state.staffCampusFrequency)
-                  + this.state.fallContractStaffPct/100 * this.state.contractStaff * (100 - this.state.contractCampusFrequency))
-                  / this.state.mediumTestFrequency)
-
-                  +
-
-                  ((this.state.fallInPersonPct/100 * this.state.fallStudentsPct/100 * (this.state.undergrad * 1 + this.state.grad * 1) * this.state.studentCampusFrequency
-                  + this.state.fallFacultyPct/100 * this.state.normalFaculty * this.state.facultyCampusFrequency
-                  + this.state.fallStaffPct/100 * this.state.normalStaff * this.state.staffCampusFrequency
-                  + this.state.fallContractStaffPct/100 * this.state.contractStaff * this.state.contractCampusFrequency)
-                  / this.state.highTestFrequency)
-                )).toLocaleString()}</strong>
+                {Math.round(
+                  (this.state.revealLongform
+                    ? (highTestCount / this.state.highTestFrequency + mediumTestCount / this.state.mediumTestFrequency)
+                    : (this.state.quickHighCount / this.state.highTestFrequency + this.state.quickMediumCount / this.state.mediumTestFrequency)
+                  )
+                * this.state.costPerTest * this.state.semesterLength).toLocaleString()}</strong>
               </div>
           </div>
-          : <button className="btn btn-large btn-info" onClick={e => this.setState({ reveal: true })}>Estimate Costs</button>
+          : <button className="btn btn-large btn-info" onClick={e => this.setState({ revealFinal: true })}>Project Costs</button>
         }
         </div>
         <br/>

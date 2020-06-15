@@ -22,6 +22,12 @@ export default function FormQ(props) {
           <div className="input-group-append">
             <span className="input-group-text">%</span>
           </div>
+          {props.middleText
+            ? <span className="middleText" style={{fontSize: '10pt'}}>
+                {props.middleText}
+              </span>
+            : null
+          }
         </div> : null}
 
         <input
@@ -49,5 +55,8 @@ export default function FormQ(props) {
 
       </div>
     </div>
+    {props.help ?
+      <small>{props.help}</small>
+    : null}
   </form>
 }
