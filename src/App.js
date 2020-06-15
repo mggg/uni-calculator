@@ -328,7 +328,7 @@ class App extends React.Component {
           <TestingSlider
             label="Student campus-visit frequency"
             value={this.state.studentCampusFrequency}
-            onChange={e => this.setState({ studentCampusFrequency: e.target.value })}
+            onChange={e => this.setState({ studentCampusFrequency: e.target.value * 1 })}
           />
 
           <hr/>
@@ -345,7 +345,7 @@ class App extends React.Component {
           <TestingSlider
             label="Faculty campus-visit frequency"
             value={this.state.facultyCampusFrequency}
-            onChange={e => this.setState({ facultyCampusFrequency: e.target.value })}
+            onChange={e => this.setState({ facultyCampusFrequency: e.target.value * 1 })}
           />
 
           <hr/>
@@ -362,7 +362,7 @@ class App extends React.Component {
           <TestingSlider
             label="Staff campus-visit frequency"
             value={this.state.staffCampusFrequency}
-            onChange={e => this.setState({ staffCampusFrequency: e.target.value })}
+            onChange={e => this.setState({ staffCampusFrequency: e.target.value * 1 })}
           />
 
           <hr/>
@@ -379,7 +379,7 @@ class App extends React.Component {
           <TestingSlider
             label="Contract staff campus-visit frequency"
             value={this.state.contractCampusFrequency}
-            onChange={e => this.setState({ contractCampusFrequency: e.target.value })}
+            onChange={e => this.setState({ contractCampusFrequency: e.target.value * 1 })}
           />
         </div>
 
