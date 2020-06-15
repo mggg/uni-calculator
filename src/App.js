@@ -412,6 +412,7 @@ class App extends React.Component {
                   //   })
                   // }}
                   disabled
+                  required
                 />
                 <div className="input-group-append">
                   <span className="input-group-text">%</span>
@@ -433,6 +434,7 @@ class App extends React.Component {
                     ) / 100)
                   }
                   disabled="disabled"
+                  required
                 />
                 <div className="input-group-append">
                   <span className="input-group-text">members</span>
@@ -453,7 +455,7 @@ class App extends React.Component {
                       highTestFrequency: e.target.value
                     })
                   }}
-                />
+                required/>
                 <div className="input-group-append">
                   <span className="input-group-text">days</span>
                 </div>
@@ -483,6 +485,7 @@ class App extends React.Component {
                   //     highTestPercent: 100 - (e.target.value * 1)
                   //   })
                   // }}
+                  required
                 />
                 <div className="input-group-append">
                   <span className="input-group-text">%</span>
@@ -504,6 +507,7 @@ class App extends React.Component {
                     ) / 100)
                   }
                   disabled="disabled"
+                  required
                 />
                 <div className="input-group-append">
                   <span className="input-group-text">members</span>
@@ -524,7 +528,7 @@ class App extends React.Component {
                       mediumTestFrequency: e.target.value
                     })
                   }}
-                />
+                required/>
                 <div className="input-group-append">
                   <span className="input-group-text">days</span>
                 </div>
@@ -546,6 +550,7 @@ class App extends React.Component {
                       costPerTest: e.target.value * 1
                     })
                   }}
+                  required
                 />
                 <div className="input-group-append">
                   <span className="input-group-text">dollars</span>
@@ -567,6 +572,7 @@ class App extends React.Component {
                       semesterLength: e.target.value * 1
                     })
                   }}
+                  required
                 />
                 <div className="input-group-append">
                   <span className="input-group-text">days</span>
