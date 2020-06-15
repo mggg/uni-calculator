@@ -199,15 +199,17 @@ class App extends React.Component {
   render() {
 
     let highTestCount = (this.state.fallStudentsPct/100 * this.state.studentCampusFrequency/100 * this.state.undergrad
-    + this.state.fallFacultyPct/100 * this.state.facultyCampusFrequency/100 * this.state.normalFaculty
-    + this.state.fallStaffPct/100 * this.state.staffCampusFrequency/100 * this.state.normalStaff
+    + this.state.facultyCampusFrequency/100 * this.state.normalFaculty
+    + this.state.staffCampusFrequency/100 * this.state.normalStaff
     + this.state.gradCountHigh
     + this.state.contractCountHigh);
     let mediumTestCount = (this.state.fallStudentsPct/100 * (this.state.fallInPersonPct/100-this.state.studentCampusFrequency/100) * this.state.undergrad
-    + this.state.fallFacultyPct/100 * (1-this.state.facultyCampusFrequency/100) * this.state.normalFaculty
-    + this.state.fallStaffPct/100 * (1-this.state.staffCampusFrequency/100) * this.state.normalStaff
+    + (this.state.fallFacultyPct - this.state.facultyCampusFrequency)/100 * this.state.normalFaculty
+    + (this.state.fallStaffPct - this.state.staffCampusFrequency)/100 * this.state.normalStaff
     + this.state.gradCountMed
     + this.state.contractCountMed);
+
+    console.log(this.state.fallFacultyPct/100 + " * " + (1-this.state.facultyCampusFrequency/100) + " * " + this.state.normalFaculty)
 
     return (<div className="container">
       <div className="col-sm-12">
