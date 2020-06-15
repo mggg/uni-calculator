@@ -376,6 +376,7 @@ class App extends React.Component {
               ]}
               inPersonPct={this.state.fallInPersonPct}
               highFrequencyPct={this.state.studentCampusFrequency}
+              showExplainer="true"
               onChange={(a, b) => this.setState({
                 fallInPersonPct: a * 1,
                 studentCampusFrequency: b * 1,

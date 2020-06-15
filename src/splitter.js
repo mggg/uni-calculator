@@ -7,12 +7,12 @@ export default function TestingSlider(props) {
         <td>
           High test cohort
           <br/>
-          <em>(on campus at least 3 times a week)</em>
+          {props.showExplainer ? <em>(on campus at least 3 times a week)</em> : null}
         </td>
         <td>
           Medium test cohort
           <br/>
-          <em>(on campus at 1-2 times a week)</em>
+          {props.showExplainer ? <em>(on campus 1-2 times a week)</em> : null}
         </td>
         <td>
           Remote or occasional
