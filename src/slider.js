@@ -12,6 +12,6 @@ export default function TestingSlider(props) {
       onChange={props.onChange}
       value={props.value}
     />
-    <span>&nbsp;&nbsp;&nbsp;{props.value.toFixed(1)}% high, {(100-props.value).toFixed(1)}% medium</span>
+    <span>&nbsp;&nbsp;&nbsp;{(100-props.value).toFixed(1)}% medium, {props.value.toFixed(1)}% high</span>
   </div>
 }

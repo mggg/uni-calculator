@@ -325,7 +325,7 @@ class App extends React.Component {
           />
           <FormQ
             id="fall"
-            label="Projected weekly on-campus campus"
+            label="Projected weekly on-campus students"
             value={this.state.fallInPerson}
             source={this.state.fallStudents}
             counts="students"
@@ -386,11 +386,6 @@ class App extends React.Component {
             counts="members"
             percent="%"
             onChange={val => this.updateRawVal('fallContractStaff', val)}
-          />
-          <TestingSlider
-            label="Contract staff campus-visit frequency"
-            value={this.state.contractCampusFrequency}
-            onChange={e => this.setState({ contractCampusFrequency: e.target.value * 1 })}
           />
         </div>
 
