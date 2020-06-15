@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/uni-calculator/static/css/main.6b61412c.chunk.css",
-    "main.js": "/uni-calculator/static/js/main.ae2881cb.chunk.js",
-    "main.js.map": "/uni-calculator/static/js/main.ae2881cb.chunk.js.map",
+    "main.js": "/uni-calculator/static/js/main.609d5c84.chunk.js",
+    "main.js.map": "/uni-calculator/static/js/main.609d5c84.chunk.js.map",
     "runtime-main.js": "/uni-calculator/static/js/runtime-main.7f1766f1.js",
     "runtime-main.js.map": "/uni-calculator/static/js/runtime-main.7f1766f1.js.map",
     "static/js/2.968e3c08.chunk.js": "/uni-calculator/static/js/2.968e3c08.chunk.js",
     "static/js/2.968e3c08.chunk.js.map": "/uni-calculator/static/js/2.968e3c08.chunk.js.map",
     "index.html": "/uni-calculator/index.html",
-    "precache-manifest.9b956b7db8cfeb8b63014f93cf37db8c.js": "/uni-calculator/precache-manifest.9b956b7db8cfeb8b63014f93cf37db8c.js",
+    "precache-manifest.be8f44f52ab4199723140915c9de575c.js": "/uni-calculator/precache-manifest.be8f44f52ab4199723140915c9de575c.js",
     "service-worker.js": "/uni-calculator/service-worker.js",
     "static/css/main.6b61412c.chunk.css.map": "/uni-calculator/static/css/main.6b61412c.chunk.css.map",
     "static/js/2.968e3c08.chunk.js.LICENSE.txt": "/uni-calculator/static/js/2.968e3c08.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.7f1766f1.js",
     "static/js/2.968e3c08.chunk.js",
     "static/css/main.6b61412c.chunk.css",
-    "static/js/main.ae2881cb.chunk.js"
+    "static/js/main.609d5c84.chunk.js"
   ]
 }
