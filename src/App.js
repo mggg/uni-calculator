@@ -462,7 +462,7 @@ class App extends React.Component {
         <div>
           <div className="qSection">
             <hr id="separator"></hr>
-            <h4>Quick Calculator</h4>
+            <h4>{this.state.revealLongform ? "Final Calculator" : "Quick Calculator"}</h4>
           </div>
         </div>
 
