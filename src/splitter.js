@@ -29,10 +29,14 @@ export default function TestingSlider(props) {
                 max="100"
                 value={props.highFrequencyPct}
                 onChange={e => {
-                  let inPerson = props.inPersonPct,
-                      highFreqPct = Math.max(0, Math.min(100, e.target.value));
-                  if (highFreqPct > inPerson) {
-                    inPerson = highFreqPct;
+                  let inPerson = props.inPersonPct * 1,
+                      highFreqPct = Math.min(100, Math.max(0, e.target.value * 1)),
+                      currentMed = inPerson - props.highFrequencyPct * 1;
+                  if (highFreqPct + currentMed < 100) {
+                      inPerson = highFreqPct + currentMed;
+                  } else {
+                      inPerson = 100;
+                      highFreqPct = highFreqPct;
                   }
                   props.onChange(inPerson, highFreqPct);
                 }}
@@ -53,10 +57,14 @@ export default function TestingSlider(props) {
                 max="100"
                 value={props.inPersonPct - props.highFrequencyPct}
                 onChange={e => {
-                  let inPerson = props.inPersonPct,
-                      highFreqPct = inPerson - Math.max(0, Math.min(100, e.target.value));
-                  if (highFreqPct < 0) {
-                    inPerson = e.target.value;
+                  let inPerson = props.inPersonPct * 1,
+                      highFreqPct = props.highFrequencyPct * 1,
+                      medRequest = Math.min(100, Math.max(0, e.target.value * 1));
+                  if (highFreqPct + medRequest < 100) {
+                      inPerson = highFreqPct + medRequest;
+                  } else {
+                      inPerson = 100;
+                      highFreqPct = 100 - medRequest;
                   }
                   props.onChange(inPerson, highFreqPct);
                 }}
@@ -76,14 +84,7 @@ export default function TestingSlider(props) {
                 min="0"
                 max="100"
                 value={100 - props.inPersonPct}
-                onChange={e => {
-                  let inPerson = 100 - e.target.value,
-                      highFreqPct = props.highFrequencyPct;
-                  if (inPerson < highFreqPct) {
-                    highFreqPct = inPerson;
-                  }
-                  props.onChange(inPerson, highFreqPct);
-                }}
+                disabled
               />
               <div className="input-group-append">
                 <span className="input-group-text">%</span>

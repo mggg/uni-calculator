@@ -82,17 +82,38 @@ class App extends React.Component {
   updateRawVal(key, origVal) {
     let ob = { revealFinal: false };
     ob[key] = origVal;
+
+    if (key === "grad") {
+      if (this.state.gradCountHigh + this.state.gradCountMed > origVal) {
+        ob.gradCountHigh = 0;
+        ob.gradCountMed = 0;
+      }
+    } else if (key === "contractStaff") {
+      if (this.state.contractCountHigh + this.state.contractCountMed > origVal) {
+        ob.contractCountHigh = 0;
+        ob.contractCountMed = 0;
+      }
+    }
     this.setState(ob);
   }
 
   prefill(college_index) {
-    let college = this.state.colleges[college_index];
+    let college = this.state.colleges[college_index],
+        gradCounts = {
+          gradCountHigh: this.state.gradCountHigh,
+          gradCountMed: this.state.gradCountMed
+        };
+    if (gradCounts.gradCountHigh + gradCounts.gradCountMed > college.grad) {
+      gradCounts.gradCountHigh = 0;
+      gradCounts.gradCountMed = 0;
+    }
     this.setState({
+      ...gradCounts,
       undergrad: college.undergrad,
       grad: college.grad,
       fallStudentsPct: 100,
       residential: college.residential,
-      revealFinal: false
+      revealFinal: false,
     });
   }
 
