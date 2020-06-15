@@ -28,7 +28,7 @@ class App extends React.Component {
       staffCampusFrequency: 50, // %
 
       contractStaff: 0,
-      fallContractStaffPct: 0,
+      fallContractStaffPct: 50,
       contractCampusFrequency: 50, // %
 
       colleges: [],
@@ -406,6 +406,11 @@ class App extends React.Component {
             counts="members"
             percent="%"
             onChange={val => this.updateRawVal('fallContractStaffPct', val)}
+          />
+          <TestingSlider
+            label="Contract staff campus-visit frequency"
+            value={this.state.contractCampusFrequency}
+            onChange={e => this.setState({ contractCampusFrequency: e.target.value * 1 })}
           />
         </div>
 
