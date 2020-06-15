@@ -352,7 +352,7 @@ class App extends React.Component {
             <h5>ENROLLED UNDERGRADUATE STUDENTS
               <br/>
               <em>Reminder: normal undergraduate enrollment is&nbsp;
-                {(this.state.undergrad + this.state.grad).toLocaleString()}
+                {(this.state.undergrad).toLocaleString()}
               </em>
             </h5>
 
