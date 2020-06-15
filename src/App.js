@@ -182,7 +182,7 @@ class App extends React.Component {
     + this.state.fallStaffPct/100 * this.state.staffCampusFrequency/100 * this.state.normalStaff
     + this.state.gradCountHigh
     + this.state.contractCountHigh);
-    let mediumTestCount = (this.state.fallStudentsPct/100 * (1-this.state.studentCampusFrequency/100) * this.state.undergrad
+    let mediumTestCount = (this.state.fallStudentsPct/100 * (this.state.fallInPersonPct/100-this.state.studentCampusFrequency/100) * this.state.undergrad
     + this.state.fallFacultyPct/100 * (1-this.state.facultyCampusFrequency/100) * this.state.normalFaculty
     + this.state.fallStaffPct/100 * (1-this.state.staffCampusFrequency/100) * this.state.normalStaff
     + this.state.gradCountMed
@@ -349,24 +349,24 @@ class App extends React.Component {
 
           <div className="qSection" style={{display: (this.state.scenarioSelect ? "block" : "block")}}>
             <br/>
-
-            <FormQ
-              id="fall"
-              label="Projected student enrollment in fall"
-              value={this.state.fallStudentsPct}
-              source={this.state.undergrad + this.state.grad}
-              middleText="of normal enrollment ="
-              counts="students"
-              percent="%"
-              onChange={val => this.updateRawVal('fallStudentsPct', val * 1)}
-              help="This is the percent of normal student headcount you expect to enroll and pay tuition this fall. If total enrollment is projected at 80% of usual, put 80 in the first box."
-            />
             <h5>ENROLLED UNDERGRADUATE STUDENTS
               <br/>
               <em>Reminder: normal undergraduate enrollment is&nbsp;
                 {(this.state.undergrad + this.state.grad).toLocaleString()}
               </em>
             </h5>
+
+            <FormQ
+              id="fall"
+              label="Projected student enrollment in fall"
+              value={this.state.fallStudentsPct}
+              source={this.state.undergrad}
+              middleText="of normal enrollment ="
+              counts="students"
+              percent="%"
+              onChange={val => this.updateRawVal('fallStudentsPct', val * 1)}
+              help="This is the percent of normal student headcount you expect to enroll and pay tuition this fall. If total enrollment is projected at 80% of usual, put 80 in the first box."
+            />
 
             <TestingSplit
               help={[
