@@ -164,8 +164,9 @@ class App extends React.Component {
               <li></li>
             </ul>
           </section>
-
         </div>
+
+        <hr id="separator"></hr>
 
         <div className="qSection">
           <h3>Load data for a university</h3>
@@ -241,6 +242,8 @@ class App extends React.Component {
             onChange={val => this.updateRawVal('contractStaff', val * 1)}
           />
         </div>
+
+        <hr id="separator"></hr>
 
         <div className="qSection">
           <section>
@@ -377,9 +380,9 @@ class App extends React.Component {
             value={this.state.contractCampusFrequency}
             onChange={e => this.setState({ contractCampusFrequency: e.target.value })}
           />
-
-          <hr/>
         </div>
+
+        <hr id="separator"></hr>
 
         <div className="qSection cohorts">
           <h4>Testing</h4>
