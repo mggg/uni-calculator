@@ -9,38 +9,35 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      scenarioSelect: 1,
+      scenarioSelect: 0, // 0 = make-your-own
 
       undergrad: 800,
       grad: 200,
       beds: 1000,
-      fallStudents: 800,
-      fallInPerson: 800,
-
+      fallStudents: 800, // count of students who re-enrolled
+      fallInPerson: 800, // count of students coming in weekly
       studentCampusFrequency: 50,
-      facultyCampusFrequency: 50,
-      staffCampusFrequency: 50,
-      contractCampusFrequency: 50,
 
-      normalFaculty: 100, // raw number
-      fallFaculty: 80, // count from above
-      regularFaculty: 80, // count from fall faculty
+
+      normalFaculty: 100, // count of normal faculty
+      fallFaculty: 80, // count of fall faculty (appearing weekly or more)
+      facultyCampusFrequency: 50, // this is a %
 
       normalStaff: 50,
       fallStaff: 50,
-      regularStaff: 50,
+      staffCampusFrequency: 50, // %
 
       contractStaff: 20,
       fallContractStaff: 20,
-      regularContractStaff: 20,
+      contractCampusFrequency: 50, // %
 
       colleges: [],
 
       costPerTest: 20.00,
 
       semesterLength: 80,
-      highTestFrequency: 3,
-      mediumTestFrequency: 7,
+      highTestFrequency: 3, // this can be a decimal; every N days
+      mediumTestFrequency: 7, // this can be a decmimal; every N days
 
       reveal: false
     }
@@ -106,7 +103,6 @@ class App extends React.Component {
         staffCampusFrequency: 50,
 
         fallContractStaff: 250,
-        regularContractStaff: 250,
         contractCampusFrequency: 100,
         scenarioSelect: 1
       });
@@ -118,7 +114,6 @@ class App extends React.Component {
         facultyCampusFrequency: 50,
         staffCampusFrequency: 80,
         fallContractStaff: 250,
-        regularContractStaff: 250,
         contractCampusFrequency: 100,
         scenarioSelect: 2
       });
@@ -130,7 +125,6 @@ class App extends React.Component {
         facultyCampusFrequency: 16/65 * 100,
         staffCampusFrequency: 25,
         fallContractStaff: 150,
-        regularContractStaff: 150,
         contractCampusFrequency: 100,
         scenarioSelect: 3
       });
@@ -141,7 +135,6 @@ class App extends React.Component {
         studentCampusFrequency: 100,
         facultyCampusFrequency: 80,
         staffCampusFrequency: 60,
-        regularContractStaff: 0,
         contractCampusFrequency: 0,
         scenarioSelect: 4
       });
