@@ -168,7 +168,7 @@ class App extends React.Component {
 
         <hr id="separator"></hr>
 
-        <div className="qSection">
+        <div className="qSection prefill">
           <h3>Load data for a university</h3>
           <small>Source: HIFLD Open GeoData, 2017-2018</small>
           <br/>
@@ -211,7 +211,8 @@ class App extends React.Component {
           />
         </div>
 
-        <div className="qSection">
+        <div className="qSection prefill">
+          <br/>
           <strong>Provide numbers of faculty and staff</strong>
           <br/><br/>
 
@@ -225,7 +226,7 @@ class App extends React.Component {
           />
         </div>
 
-        <div className="qSection">
+        <div className="qSection prefill">
           <h4>Staff</h4>
           <FormQ
             id="staff"

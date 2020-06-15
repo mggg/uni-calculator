@@ -99,3 +99,8 @@ label.scenario strong {
   margin-top: 3em;
   margin-bottom: 3em;
 }
+
+.prefill .form-group {
+  margin-top: -1.5em;
+  margin-bottom: -1.5em;
+}
