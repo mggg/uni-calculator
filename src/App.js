@@ -693,8 +693,7 @@ class App extends React.Component {
                     * this.state.semesterLength / this.state.mediumTestFrequency
                 ).toFixed(2)}</strong>
               </div>
-              <br/>
-              <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '85%'}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '85%', marginTop: 8}}>
                 Total cost
                 <strong>$
                 {Math.round(
