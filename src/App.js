@@ -326,7 +326,7 @@ class App extends React.Component {
               handled by a LOW testing cohort which includes some occasional and some ad hoc testing, but we
               leave that out of this calculator because it may not be part of the bulk testing order.
               Scenarios below are just illustrative, to help you think about how the numbers may relate.
-              Please refer to this cover sheet (link to PDF) for explanations of the scenarios.
+              Please refer to <a href="/uni-calculator/testing-scenarios.pdf" target="_blank">this cover sheet</a> for explanations of the scenarios.
               </p>
 
               <Scenario
