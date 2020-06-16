@@ -35,7 +35,7 @@ class App extends React.Component {
       fallStaffPct: 50,
       staffCampusFrequency: 50, // %
 
-      contractStaff: 0,
+      // contractStaff: 0,
       contractCountHigh: 0,
       contractCountMed: 0,
 
@@ -44,7 +44,7 @@ class App extends React.Component {
       costPerTest: 25.00,
 
       semesterLength: 80,
-      highTestFrequency: 3, // this can be a decimal; every N days
+      highTestFrequency: 3.5, // this can be a decimal; every N days
       mediumTestFrequency: 7, // this can be a decmimal; every N days
     }
 
@@ -88,11 +88,11 @@ class App extends React.Component {
         ob.gradCountHigh = 0;
         ob.gradCountMed = 0;
       }
-    } else if (key === "contractStaff") {
-      if (this.state.contractCountHigh + this.state.contractCountMed > origVal) {
-        ob.contractCountHigh = 0;
-        ob.contractCountMed = 0;
-      }
+    // } else if (key === "contractStaff") {
+    //   if (this.state.contractCountHigh + this.state.contractCountMed > origVal) {
+    //     ob.contractCountHigh = 0;
+    //     ob.contractCountMed = 0;
+    //   }
     }
     this.setState(ob);
   }
@@ -135,7 +135,7 @@ class App extends React.Component {
         fallStaffPct: 60,
         staffCampusFrequency: 50,
 
-        contractCountHigh: Math.min(this.state.contractStaff, 250),
+        contractCountHigh: 250,
 
         scenarioSelect: 1,
         revealFinal: false,
@@ -152,7 +152,7 @@ class App extends React.Component {
         fallStaffPct: 50,
         staffCampusFrequency: 40,
 
-        contractCountHigh: Math.min(this.state.contractStaff, 100),
+        contractCountHigh: 100,
 
         scenarioSelect: 2,
         revealFinal: false,
@@ -169,7 +169,7 @@ class App extends React.Component {
         fallStaffPct: 25,
         staffCampusFrequency: 25,
 
-        contractCountHigh: Math.min(this.state.contractStaff, 100),
+        contractCountHigh: 100,
         scenarioSelect: 3,
         revealFinal: false,
       });
@@ -209,8 +209,6 @@ class App extends React.Component {
     + this.state.gradCountMed
     + this.state.contractCountMed);
 
-    console.log(this.state.fallFacultyPct/100 + " * " + (1-this.state.facultyCampusFrequency/100) + " * " + this.state.normalFaculty)
-
     return (<div className="container">
       <div className="col-sm-12">
         <div style={{textAlign: 'center' }}>
@@ -219,9 +217,18 @@ class App extends React.Component {
           </nav>
 
           <section className="qSection">
-            <p style={{textAlign: 'left', padding: '10px'}}><strong>This is a scenario-building tool to help university leadership arrive at plans for COVID testing cohorts and
-            frequency for the Fall 2020 semester.</strong>  Its intention is to help universities plan a bulk testing commitment in June,
-            such as (but not exclusively) the testing service to be offered by the Broad Institute.</p>
+            <p style={{textAlign: 'left', padding: '10px'}}>
+              <strong>This is a scenario-building tool to help university leadership arrive at plans for COVID testing cohorts and frequency for the Fall 2020 semester.</strong>
+              Our intention is to help universities plan a bulk testing commitment in June, such as (but not exclusively) with
+              the testing service to be offered by the Broad Institute.  This calculator is a project of the MGGG Redistricting Lab
+              (<a href="https://mggg.org" target="_blank">mggg.org</a>)
+              at Tisch College of Tufts University.  For information, contact&nbsp;
+              <a href="mailto:Moon.Duchin@tufts.edu">Moon.Duchin@tufts.edu</a>.
+            </p>
+            <p style={{textAlign: 'left', padding: '10px'}}>
+              <strong>How to use this calculator:</strong>&nbsp;
+              enter numbers yourself, or use the worksheet option for help building your testing cohorts.
+            </p>
           </section>
 
           <section className="qSection suggestions">
@@ -241,6 +248,7 @@ class App extends React.Component {
 
           <div className="qSection prefill">
             <h3>Load data for a university</h3>
+            <small style={{display: "block", marginTop: 5}}>We recommend that you use this form separately for each campus (main campus vs. med campus, for example).</small>
             <br/>
             University &nbsp;&nbsp;
             <select onChange={e => this.prefill(e.target.value)}>
@@ -299,18 +307,13 @@ class App extends React.Component {
             <h4>Staff</h4>
             <FormQ
               id="staff"
-              label="On-campus staff, university-employed"
+              label="On-campus staff, university-employed (incl. part-time instructors)"
               value={this.state.normalStaff}
               counts="members"
               onChange={val => this.updateRawVal('normalStaff', val * 1)}
             />
-            <FormQ
-              id="contract"
-              label="On-campus staff, contract (incl. part-time instructors)"
-              value={this.state.contractStaff}
-              counts="members"
-              onChange={val => this.updateRawVal('contractStaff', val * 1)}
-            />
+
+            <strong>Contract staff will be included below</strong>
           </div>
 
           <hr id="separator"></hr>
@@ -318,13 +321,13 @@ class App extends React.Component {
           <div className="qSection">
             <section>
               <h3>Scenarios</h3>
-              <p>All parameters will be customizable below, but we begin with the assumption of
-              an 80-day semester, which is a working hypothesis for many schools.</p>
-              <p>We will build a HIGH testing cohort (those coming to campus at least 3 days per week)
-              and a MEDIUM testing cohort (those coming to campus 1-2 days per week).
-              Other testing should be handled by a LOW testing cohort which includes some occasional
-              and some ad hoc testing, but we leave that out of this calculation because bulk
-              testing options will probably not be available for low-testing/ad hoc group.</p>
+              <p>All parameters will be customizable below.</p>
+              <p>We will build a HIGH testing cohort and a MEDIUM testing cohort. Other testing should be
+              handled by a LOW testing cohort which includes some occasional and some ad hoc testing, but we
+              leave that out of this calculator because it may not be part of the bulk testing order.
+              Scenarios below are just illustrative, to help you think about how the numbers may relate.
+              Please refer to this cover sheet (link to PDF) for explanations of the scenarios.
+              </p>
 
               <Scenario
                 id={1}
@@ -354,8 +357,8 @@ class App extends React.Component {
                 id={4}
                 selected={this.state.scenarioSelect}
                 onSelect={this.preplan}
-                headline="A small college with very high residency rate and limited dormitory space,"
-                body="so no feasible options for de-densification at full residency. A decision has been made to limit campus residency to first- and fourth-years, with all second- and third-years studying virtually."
+                headline="A small college with very high residency rate and limited dormitory space."
+                body="- no feasible options for de-densification at full residency. A decision has been made to limit campus residency to first- and fourth-years, with all second- and third-years studying virtually."
               />
 
               <Scenario
@@ -374,7 +377,7 @@ class App extends React.Component {
             <br/>
             <h5>ENROLLED UNDERGRADUATE STUDENTS
               <br/>
-              <em>Reminder: normal undergraduate enrollment is&nbsp;
+              <em>Reminder: usual undergraduate enrollment is set above at&nbsp;
                 {(this.state.undergrad).toLocaleString()}
               </em>
             </h5>
@@ -393,9 +396,9 @@ class App extends React.Component {
 
             <TestingSplit
               help={[
-                "This is the percent of students enrolled in the fall that you think will come to campus at least 3 times a week. If you think 25% of enrolled students will come to campus 3+ times a week, enter 25 in the box above.  Use residency percentage as a guide.",
-                "This is the percent of students enrolled in the fall that you think will come to campus 1-2 times a week. If you think 50% of enrolled students will come to campus 1-2 times a week, enter 50 in the box above.",
-                "This is the percent of students enrolled in the fall that you think will be completely remote (coming to campus less than once a week). If you think 25% of enrolled students will rarely or never come to campus in person, enter 25 in the box above."
+                "Suggestion: high-testing students might be those who you think will come to campus at least 3 times a week—in particular, this should likely include all students who live on campus. If you think 25% of enrolled students will come to campus 3+ times a week, enter 25 in the box above. Use residency percentage from above as a guide.",
+                "Suggestion: medium-testing students might be those on campus 1-2 times a week. If you think 50% of enrolled students will come to campus 1-2 times a week, enter 50 in the box above.",
+                ""
               ]}
               inPersonPct={this.state.fallInPersonPct}
               highFrequencyPct={this.state.studentCampusFrequency}
@@ -411,9 +414,9 @@ class App extends React.Component {
             <h5>FACULTY</h5>
             <TestingSplit
               help={[
-                "Student-facing faculty who are at higher risk for severe illness.",
-                "Student-facing faculty not in the high test cohort",
-                "Faculty who are not student-facing"
+                "Suggestion: student-facing faculty with higher contact.",
+                "Suggestion: faculty with less frequent or more distanced student contact.",
+                ""
               ]}
               inPersonPct={this.state.fallFacultyPct}
               highFrequencyPct={this.state.facultyCampusFrequency}
@@ -428,9 +431,9 @@ class App extends React.Component {
             <h5>UNIVERSITY-EMPLOYED STAFF</h5>
             <TestingSplit
               help={[
-                "Student-facing staff who are at higher risk for severe illness.",
-                "Student-facing staff not in the high test cohort",
-                "Staff who are not student-facing"
+                "Suggestion: student-facing staff with higher contact.",
+                "Suggestion: staff with less frequent or more distanced student contact.",
+                ""
               ]}
               inPersonPct={this.state.fallStaffPct}
               highFrequencyPct={this.state.staffCampusFrequency}
@@ -443,11 +446,16 @@ class App extends React.Component {
 
             <hr/>
 
-            <h5>GRADUATE STUDENTS</h5>
+            <h5>GRADUATE STUDENTS
+              <br/>
+              <em>Reminder: usual graduate enrollment is set above at&nbsp;
+                {(this.state.grad).toLocaleString()}
+              </em>
+            </h5>
             <TestingSplit2
               help={[
-                "How many graduate students will come to campus at least 3x/week?  For instance, grads who work in high-contact labs, or grads with heavy teaching.",
-                "How many graduate students will come to campus 1-2 times/week?  For instance, grads with lighter teaching or who will attend a small number of in-person classes."
+                "Suggestion: graduate students who reside on campus or work in environments with significant in-person contact.",
+                "Suggestion: graduate students with less frequent or more distanced contact."
               ]}
               total={this.state.grad}
               plural="graduate students"
@@ -465,10 +473,10 @@ class App extends React.Component {
             <h5>CONTRACT STAFF</h5>
             <TestingSplit2
               help={[
-                "How many contract staff will come to campus at least 3x/week?  For instance, dining hall and janitorial staff with heavy schedules.",
-                "How many contract staff will come to campus 1-2 times/week?"
+                "Suggestion: student-facing staff with higher contact, such as dining hall staff and some janitorial staff.",
+                "Suggestion: staff with less frequent or more distanced student contact."
               ]}
-              total={this.state.contractStaff}
+              total={10000}
               plural="contract staff"
               highFreqCount={this.state.contractCountHigh}
               medFreqCount={this.state.contractCountMed}
@@ -478,6 +486,8 @@ class App extends React.Component {
                 revealFinal: false,
               })}
             />
+
+            <strong>Using the numbers from this worksheet, we can now complete the price projection:</strong>
 
           </div>
 
@@ -601,7 +611,7 @@ class App extends React.Component {
               <button className="btn btn-large btn-primary" onClick={e => this.setState({
                 revealLongform: true,
                 revealFinal: false,
-              })}>Click here for scenario worksheet</button>
+              })}>Click here to expand worksheet</button>
             </div>
           </div>
           <hr/>
@@ -683,6 +693,7 @@ class App extends React.Component {
                     * this.state.semesterLength / this.state.mediumTestFrequency
                 ).toFixed(2)}</strong>
               </div>
+              <br/>
               <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '85%'}}>
                 Total cost
                 <strong>$

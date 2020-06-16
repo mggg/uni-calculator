@@ -13,7 +13,7 @@ code {
 }
 
 a {
-  color: #42b983;
+  color: blue !important;
 }
 h4 {
   text-align: left;
@@ -122,6 +122,10 @@ label.scenario strong {
   margin-right: -7px;
 }
 
+td {
+  width: 33%;
+  vertical-align: top;
+}
 td em {
   font-size: 80%;
   font-weight: 400;

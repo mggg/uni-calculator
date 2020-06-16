@@ -36,7 +36,6 @@ export default function TestingSlider(props) {
                       inPerson = highFreqPct + currentMed;
                   } else {
                       inPerson = 100;
-                      highFreqPct = highFreqPct;
                   }
                   props.onChange(inPerson, highFreqPct);
                 }}
